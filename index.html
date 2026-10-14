@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="font.css">
     <link rel="icon" href="favicon.ico">
 
-</head
+</head>
 <body>
     <header>
         <div class="navbar">
             <a href="" style="font-family: 'Noto Serif TC', serif; font-size: 30px; font-weight: 700; text-decoration: none; color: #5C3D2E; letter-spacing: 10px;" >六腳鄉</a>
-            
-            <nav>
+            <nav style="display: flex; align-items: center; gap: 20px;">
+                <button class="text-only-btn" style="font-size: 15px;" onclick="openPaywallModal()">about us</button>
                 <button class="text-only-btn">≡</button>
             </nav>
         </div>
@@ -31,5 +31,6 @@
 
     <!-- 字體fade in out --><script src="scroll-effects.js"></script>
     <!-- 載入廣告 --><script src="ad.js"></script><!-- 載入廣告 -->
+    <!-- 付費視窗 --><script src="paywall.js"></script>
 </body>
 </html>

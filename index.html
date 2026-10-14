@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>6🦶香</title>
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="font.css">
+    <link rel="stylesheet" href="css/font.css">
     <link rel="icon" href="favicon.ico">
 
 </head>
@@ -17,8 +17,16 @@
                 <button class="text-only-btn" style="font-size: 15px;" onclick="location.href='about-us.html'">about us</button>
                 
                 <button class="text-only-btn" style="font-size: 15px;" onclick="openPaywallModal()">FAQ</button>
-                <button class="text-only-btn">≡</button>
-                </div>
+                <div class="dropdown-wrapper">
+                    <button type="button" class="text-only-btn burger">≡</button>
+                    <div id="navDropdown" class="dropdown-menu">
+                        <a href="#spot1">蒜頭糖廠</a>
+                        <a href="#spot2">苦楝樹隧道</a>
+                        <a href="#spot3">黃花風鈴木</a>
+                        <a href="#food">在地美食</a>
+                        <a href="#traffic">交通指南</a>
+                    </div>
+            </div>
             </nav>
         </div>
     </header>
@@ -32,9 +40,10 @@
   This website is under construction</p>
     </main>
 
-    <!-- 字體fade in out --><script src="scroll-effects.js"></script>
-    <!-- 載入廣告 --><script src="ad.js"></script><!-- 載入廣告 -->
-    <!-- 付費視窗 --><script src="paywall.js"></script>
+    <!-- 字體fade in out --><script src="js/scroll-effects.js"></script>
+    <!-- 載入廣告 --><script src="js/ad.js"></script><!-- 載入廣告 -->
+    <!-- 付費視窗 --><script src="js/paywall.js"></script>
+     <!-- main --><script src="js/main.js"></script>
 
     <footer style="text-align: center; font-size: 10px;"><p>&copy; 2006-2026 版權所有 翻譯必究</p></footer>
 </body>

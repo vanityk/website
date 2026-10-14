@@ -52,37 +52,47 @@ body {
   transform: translateY(3px); /* 下移：向下平移 3 像素 (px) */
 }
 
-/* 將 .dropdown-menu 相關的全部合在一起 */
+/* 外層容器：關鍵在於要以它為基準對齊，並包住按鈕與選單 */
+.dropdown-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  /* 【核心 1：Hover 展開】滑鼠只要碰到漢堡鍵或展開的選單，選單就立刻顯示 */
+  &:hover .dropdown-menu {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+
+
+/* 下拉選單本體 */
 .dropdown-menu {
-  display: none;
+  display: none;             /* 平常滑鼠沒放上去時隱藏 */
   position: absolute;
-  top: 50px;
-  right: 0;
+  top: 100%;                 /* 剛好緊貼在漢堡鍵正下方 */
+  right: 0;                  /* 【核心 2：對齊】選單最右邊與漢堡鍵最右邊精準切齊 */
   width: 160px;
   background: #F7F4EE;
   border-radius: 10px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(92, 61, 46, 0.15);
   overflow: hidden;
   z-index: 1001;
 
-  /* 合併 .dropdown-menu.show */
-  &.show {
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* 合併 .dropdown-menu a */
+  /* 選單項目連結 */
   a {
     padding: 12px 18px;
     color: #7A7067;
     text-decoration: none;
     font-size: 15px;
-    transition: 0.2s;
+    transition: background 0.2s, color 0.2s;
 
-    /* 合併 .dropdown-menu a:hover */
+    /* 滑鼠停留在項目上時顏色加深 */
     &:hover {
       background: rgba(92, 61, 46, 0.1);
-      color: #2C2623; /* 滑鼠移上去顏色變深 */
+      color: #2C2623;
     }
   }
 }

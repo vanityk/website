@@ -1,10 +1,17 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0px;
-  padding-top: 80px; /* 避開 navbar */
   background-color: #2C2623; /* 溫潤的暖米白底色，不要純白刺眼 */
   color: #F7F4EE;
   font-family: "Noto Serif TC", "Songti TC", serif; /* 襯線字體更有旅行文學感 */
-  
+  overflow-x: hidden; 
+}
+
+main{
+  margin: 30px;
 }
 
 .navbar {
@@ -94,5 +101,17 @@ body {
       background: rgba(92, 61, 46, 0.1);
       color: #2C2623;
     }
+  }
+}
+
+/*文左圖右排版*/
+.row {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+
+  img {
+    width: 50%;
+    height: auto;
   }
 }

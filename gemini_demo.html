@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>走讀嘉義六腳 ｜ 慢活稻浪與舊時光的交會</title>
+  <!-- Google Fonts: Noto Serif TC & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            earth: {
+              50: '#FBF9F5',
+              100: '#F6F2E9',
+              200: '#EBDDC9',
+              300: '#DFC7A7',
+              600: '#A47D4C',
+              800: '#5C4328',
+              900: '#3A2917',
+            },
+            brick: {
+              500: '#C85A32',
+              600: '#AE4621',
+              700: '#8A3214'
+            },
+            paddy: {
+              500: '#5B7E58',
+              600: '#466444',
+              700: '#314730'
+            },
+            warmgray: {
+              800: '#2A2927',
+              900: '#1C1B19'
+            }
+          },
+          fontFamily: {
+            serif: ['"Noto Serif TC"', 'serif'],
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom subtle textures and smooth scrollbars */
+    body {
+      background-color: #F8F6F0;
+      color: #2D2A26;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .font-heritage {
+      font-family: 'Noto Serif TC', serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1ede3;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cfbe9e;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #a47d4c;
+    }
+    .hero-pattern {
+      background-image: radial-gradient(#d6c7a7 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .card-transition {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    /* Map node pulse effect */
+    @keyframes subtlePulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.18); opacity: 1; }
+    }
+    .pulse-node {
+      animation: subtlePulse 2.8s infinite ease-in-out;
+      transform-origin: center;
+    }
+  </style>
+</head>
+<body class="bg-[#F8F6F0] text-warmgray-900 selection:bg-brick-500 selection:text-white pb-24 md:pb-12">
+
+  <header class="sticky top-0 z-40 bg-[#F8F6F0]/90 backdrop-blur-md border-b border-earth-200 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-brick-500 text-white flex items-center justify-center font-heritage font-bold text-xl shadow-sm">
+          六
+        </div>
+        <div>
+          <span class="font-heritage text-lg font-bold text-warmgray-900 tracking-wide block leading-tight">慢行六腳</span>
+          <span class="text-[11px] text-stone-500 tracking-wider">CHIAYI LIUJIAO TOWNSHIP</span>
+        </div>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-stone-700">
+        <a href="#routes" class="hover:text-brick-600 transition">主題路線</a>
+        <a href="#spots" class="hover:text-brick-600 transition">景點地圖探索</a>
+        <a href="#calendar" class="hover:text-brick-600 transition">風土特產四季曆</a>
+        <a href="#info" class="hover:text-brick-600 transition">交通與行前須知</a>
+      </nav>
+
+      <!-- Pocket Trigger Button -->
+      <div class="flex items-center gap-3">
+        <button id="openPocketBtn" class="flex items-center gap-2 bg-stone-900 text-amber-100 hover:bg-brick-600 text-sm font-medium py-2 px-4 rounded-full shadow-sm card-transition group">
+          <i data-lucide="compass" class="w-4 h-4 text-amber-300 group-hover:rotate-45 transition-transform"></i>
+          <span>行程 Pocket</span>
+          <span id="pocketCountBadge" class="bg-brick-500 text-white text-xs px-2 py-0.5 rounded-full font-bold ml-0.5">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="relative hero-pattern overflow-hidden pt-10 pb-16 md:py-24 border-b border-earth-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div class="lg:col-span-7 space-y-6">
+            <div class="inline-flex items-center gap-2 bg-earth-200/80 px-3.5 py-1.5 rounded-full text-xs font-semibold text-earth-800 tracking-wider uppercase">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brick-600"></i>
+              嘉義平原上的蒜香與老厝之鄉
+            </div>
+            
+            <h1 class="font-heritage text-3xl sm:text-5xl lg:text-6xl font-black text-warmgray-900 leading-[1.2] tracking-tight">
+              在風吹過的稻浪裡，<br>
+              <span class="text-brick-600">找回舊時光的慢節奏。</span>
+            </h1>
+            
+            <p class="text-stone-600 text-base sm:text-lg max-w-xl leading-relaxed">
+              遠離觀光人潮，走進嘉義六腳。聽五分車汽笛穿過百年蒜頭糖廠，走入《用九柑仔店》的歲月紅瓦厝，沿著朴子溪苦楝花隧道，細品質樸的農村風土與人情蒜香。
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4 pt-2">
+              <a href="#spots" class="inline-flex items-center gap-2 bg-brick-600 hover:bg-brick-700 text-white font-medium px-6 py-3 rounded-xl shadow-md card-transition">
+                <span>探索精選景點</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </a>
+              <a href="#routes" class="inline-flex items-center gap-2 bg-white/90 hover:bg-white text-stone-800 border border-stone-300 font-medium px-6 py-3 rounded-xl shadow-sm card-transition">
+                <i data-lucide="route" class="w-4 h-4 text-paddy-600"></i>
+                <span>推薦主題路線</span>
+              </a>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-earth-300/80">
+              <div class="bg-white/60 backdrop-blur-sm p-3 rounded-lg border border-earth-200">
+                <div class="font-heritage text-xl font-bold text-stone-800">1906 年</div>
+                <div class="text-xs text-stone-500 mt-0.5">明治糖鐵文化起點</div>
+              </div>
+              <div class="bg-white/60 backdrop-blur-sm p-3 rounded-lg border border-earth-200">
+                <div class="font-heritage text-xl font-bold text-stone-800">2.5 公里</div>
+                <div class="text-xs text-stone-500 mt-0.5">朴子溪苦楝綠蔭道</div>
+              </div>
+              <div class="bg-white/60 backdrop-blur-sm p-3 rounded-lg border border-earth-200">
+                <div class="font-heritage text-xl font-bold text-stone-800">全台前茅</div>
+                <div class="text-xs text-stone-500 mt-0.5">在地黑金剛與大蒜產地</div>
+              </div>
+              <div class="bg-white/60 backdrop-blur-sm p-3 rounded-lg border border-earth-200">
+                <div class="font-heritage text-xl font-bold text-stone-800">3 大路線</div>
+                <div class="text-xs text-stone-500 mt-0.5">影視懷舊與慢活散步</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Illustrated Art Card -->
+          <div class="lg:col-span-5">
+            <div class="relative mx-auto max-w-md lg:max-w-none">
+              <div class="absolute -top-4 -left-4 w-72 h-72 bg-amber-200/40 rounded-full blur-3xl -z-10"></div>
+              <div class="absolute -bottom-4 -right-4 w-72 h-72 bg-paddy-500/20 rounded-full blur-3xl -z-10"></div>
+
+              <div class="bg-white p-5 sm:p-6 rounded-2xl shadow-xl border border-earth-200 relative overflow-hidden">
+                <!-- SVG Illustration of Liujiao's iconology -->
+                <div class="h-64 sm:h-72 w-full rounded-xl bg-gradient-to-br from-amber-50 via-orange-50 to-emerald-50 border border-stone-200/60 p-4 relative flex flex-col justify-between overflow-hidden">
+                  <div class="flex justify-between items-start z-10">
+                    <span class="bg-white/90 text-stone-800 text-xs font-semibold px-2.5 py-1 rounded-md shadow-xs">
+                      嘉義縣六腳鄉 (Liùjiǎo)
+                    </span>
+                    <span class="text-brick-600 bg-brick-50 border border-brick-200 text-[11px] font-bold px-2 py-0.5 rounded">
+                      慢遊推薦
+                    </span>
+                  </div>
+
+                  <!-- SVG Graphic Elements: Train, Old House, Garlic, River -->
+                  <svg viewBox="0 0 360 160" class="w-full h-auto drop-shadow-sm my-auto">
+                    <!-- Sky & Sun -->
+                    <circle cx="280" cy="40" r="28" fill="#FDE68A" opacity="0.8" />
+                    <!-- Distant Mountain/Field -->
+                    <path d="M0,120 Q90,90 180,110 T360,105 L360,160 L0,160 Z" fill="#84A98C" opacity="0.5" />
+                    <path d="M0,135 Q100,120 220,130 T360,125 L360,160 L0,160 Z" fill="#5B7E58" opacity="0.85" />
+                    <!-- River / Rail lines -->
+                    <path d="M0,145 Q150,142 360,148" stroke="#D18748" stroke-width="3" stroke-dasharray="6,4" fill="none" />
+                    <!-- Retro Nostalgic Grocery House Silhouette -->
+                    <rect x="50" y="75" width="60" height="45" fill="#C85A32" rx="2" />
+                    <polygon points="45,76 80,48 115,76" fill="#8A3214" />
+                    <rect x="68" y="92" width="16" height="28" fill="#F8F6F0" />
+                    <rect x="90" y="85" width="12" height="15" fill="#FFE082" />
+                    <!-- Small Sugar Train icon -->
+                    <g transform="translate(160, 95)">
+                      <rect x="0" y="15" width="45" height="20" rx="3" fill="#3D5A80" />
+                      <rect x="35" y="5" width="22" height="30" rx="2" fill="#293241" />
+                      <circle cx="12" cy="36" r="6" fill="#1C1B19" />
+                      <circle cx="28" cy="36" r="6" fill="#1C1B19" />
+                      <circle cx="48" cy="36" r="6" fill="#1C1B19" />
+                      <rect x="47" y="0" width="6" height="6" fill="#EE6C4D" />
+                    </g>
+                    <!-- Garlic bulb outline -->
+                    <g transform="translate(290, 85)">
+                      <path d="M15,35 C5,35 0,25 0,16 C0,6 12,0 15,0 C18,0 30,6 30,16 C30,25 25,35 15,35 Z" fill="#FFFFFF" stroke="#5C4328" stroke-width="1.5" />
+                      <path d="M15,0 L15,35 M8,12 C10,24 15,32 15,32 M22,12 C20,24 15,32 15,32" stroke="#5C4328" stroke-width="1" fill="none" />
+                      <path d="M15,0 L15,-8" stroke="#5B7E58" stroke-width="2" stroke-linecap="round" />
+                    </g>
+                  </svg>
+
+                  <div class="bg-white/80 backdrop-blur-sm rounded-lg p-2.5 flex items-center justify-between text-xs text-stone-700 z-10 border border-stone-100">
+                    <span class="flex items-center gap-1.5 font-medium">
+                      <i data-lucide="sun" class="w-4 h-4 text-amber-500"></i>
+                      今日散策天氣：宜慢行拍照
+                    </span>
+                    <span class="text-stone-500">建議搭乘：五分車、單車</span>
+                  </div>
+                </div>
+
+                <div class="mt-4 pt-3 flex items-center justify-between text-xs text-stone-600">
+                  <span class="italic font-heritage text-stone-700">「鄉間風土，最撫凡人心。」</span>
+                  <span class="text-brick-600 font-medium">#用九柑仔店 #蒜頭糖廠</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="routes" class="py-16 bg-white border-b border-earth-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mb-10">
+          <div class="inline-flex items-center gap-2 text-brick-600 text-xs font-bold tracking-widest uppercase mb-1">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            CURATED ITINERARIES
+          </div>
+          <h2 class="font-heritage text-2xl sm:text-3xl font-black text-warmgray-900">
+            三種走進六腳的方式：情境化主題路線
+          </h2>
+          <p class="text-stone-600 text-sm sm:text-base mt-2">
+            依照您的旅伴、交通步調與偏好，點擊路線即可一鍵篩選下方景點與地圖座標。
+          </p>
+        </div>
+
+        <!-- Routes Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Route 1 -->
+          <div class="route-card group bg-stone-50 hover:bg-[#FAF6F0] rounded-2xl p-6 border-2 border-transparent hover:border-brick-500 transition-all cursor-pointer shadow-sm relative overflow-hidden flex flex-col justify-between"
+               onclick="filterByThematicRoute('nostalgia')">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-orange-100 text-brick-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i data-lucide="clapperboard" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-xs bg-orange-200/60 text-orange-900 px-2 py-0.5 rounded font-semibold">文青首選</span>
+                <span class="text-xs text-stone-500">預估 3.5 小時</span>
+              </div>
+              <h3 class="font-heritage text-xl font-bold text-stone-900 group-hover:text-brick-600 transition-colors">
+                影視懷舊與老厝散策
+              </h3>
+              <p class="text-stone-600 text-xs sm:text-sm mt-2 leading-relaxed">
+                探訪偶像劇《用九柑仔店》原汁原味拍攝地潭墘村、傳承百年雜貨鋪的慶和柑仔店，漫步閩南三合院土埆厝。
+              </p>
+            </div>
+            <div class="pt-5 mt-4 border-t border-stone-200/60 flex items-center justify-between text-xs font-semibold text-brick-600">
+              <span>查看路線景點</span>
+              <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- Route 2 -->
+          <div class="route-card group bg-stone-50 hover:bg-[#FAF6F0] rounded-2xl p-6 border-2 border-transparent hover:border-brick-500 transition-all cursor-pointer shadow-sm relative overflow-hidden flex flex-col justify-between"
+               onclick="filterByThematicRoute('sugar')">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i data-lucide="train" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-xs bg-amber-200/60 text-amber-900 px-2 py-0.5 rounded font-semibold">親子／老饕</span>
+                <span class="text-xs text-stone-500">預估 半天</span>
+              </div>
+              <h3 class="font-heritage text-xl font-bold text-stone-900 group-hover:text-brick-600 transition-colors">
+                食農風土與糖鐵記憶
+              </h3>
+              <p class="text-stone-600 text-xs sm:text-sm mt-2 leading-relaxed">
+                搭乘全台最美糖鐵五分車串連故宮南院與高鐵，走訪蒜頭糖廠紅豆冰棒、蒜頭老街炒羊肉與產地現烤黑金剛花生。
+              </p>
+            </div>
+            <div class="pt-5 mt-4 border-t border-stone-200/60 flex items-center justify-between text-xs font-semibold text-brick-600">
+              <span>查看路線景點</span>
+              <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- Route 3 -->
+          <div class="route-card group bg-stone-50 hover:bg-[#FAF6F0] rounded-2xl p-6 border-2 border-transparent hover:border-brick-500 transition-all cursor-pointer shadow-sm relative overflow-hidden flex flex-col justify-between"
+               onclick="filterByThematicRoute('nature')">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-emerald-100 text-paddy-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i data-lucide="bike" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-xs bg-emerald-200/60 text-emerald-900 px-2 py-0.5 rounded font-semibold">單車慢騎</span>
+                <span class="text-xs text-stone-500">預估 2-3 小時</span>
+              </div>
+              <h3 class="font-heritage text-xl font-bold text-stone-900 group-hover:text-brick-600 transition-colors">
+                慢活綠意與單車風鈴木
+              </h3>
+              <p class="text-stone-600 text-xs sm:text-sm mt-2 leading-relaxed">
+                沿著朴子溪自行車道穿越全台最長苦楝花隧道，春季眺望金黃風鈴木紛飛，呼吸水圳與稻浪間的清晨微風。
+              </p>
+            </div>
+            <div class="pt-5 mt-4 border-t border-stone-200/60 flex items-center justify-between text-xs font-semibold text-brick-600">
+              <span>查看路線景點</span>
+              <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="spots" class="py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 text-paddy-700 text-xs font-bold tracking-widest uppercase mb-1">
+              <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+              INTERACTIVE DIRECTORY & MAP
+            </div>
+            <h2 class="font-heritage text-2xl sm:text-3xl font-black text-warmgray-900">
+              尋覓六腳角落：互動景點探索
+            </h2>
+            <p class="text-stone-600 text-sm mt-1">
+              點擊景點可與右側鄉鎮示意地圖即時連動，支援一鍵加入專屬自訂行程。
+            </p>
+          </div>
+
+          <!-- Active Filter indicator / Reset -->
+          <div id="filterStatus" class="hidden items-center gap-2 bg-amber-100/80 border border-amber-300 text-amber-900 px-3 py-1.5 rounded-full text-xs font-medium self-start md:self-auto">
+            <span id="filterStatusText">目前篩選中</span>
+            <button onclick="resetFilters()" class="text-brick-600 hover:text-brick-700 font-bold ml-1 flex items-center gap-1">
+              <i data-lucide="x" class="w-3.5 h-3.5"></i> 清除重設
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-earth-200 mb-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+          <!-- Category Chips -->
+          <div class="flex flex-wrap items-center gap-2" id="categoryChips">
+            <button onclick="setCategoryFilter('all')" data-cat="all" class="cat-pill active px-3.5 py-1.5 rounded-full text-xs font-semibold bg-stone-900 text-white transition-all">
+              全部景點 (8)
+            </button>
+            <button onclick="setCategoryFilter('nostalgia')" data-cat="nostalgia" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-medium bg-stone-100 hover:bg-stone-200 text-stone-700 transition-all">
+              影視古厝
+            </button>
+            <button onclick="setCategoryFilter('sugar')" data-cat="sugar" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-medium bg-stone-100 hover:bg-stone-200 text-stone-700 transition-all">
+              糖鐵文化
+            </button>
+            <button onclick="setCategoryFilter('nature')" data-cat="nature" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-medium bg-stone-100 hover:bg-stone-200 text-stone-700 transition-all">
+              自然秘境
+            </button>
+            <button onclick="setCategoryFilter('food')" data-cat="food" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-medium bg-stone-100 hover:bg-stone-200 text-stone-700 transition-all">
+              風味美食
+            </button>
+          </div>
+
+          <!-- Duration Filter -->
+          <div class="flex items-center gap-2 border-t md:border-t-0 pt-3 md:pt-0 border-stone-100">
+            <span class="text-xs text-stone-500 whitespace-nowrap flex items-center gap-1">
+              <i data-lucide="clock" class="w-3.5 h-3.5"></i> 停留時間：
+            </span>
+            <select id="durationSelect" onchange="applyFilters()" class="text-xs bg-stone-50 border border-stone-300 rounded-lg py-1.5 px-3 focus:outline-none focus:ring-1 focus:ring-brick-500">
+              <option value="all">不拘時間</option>
+              <option value="quick">1 小時內 (快閃打卡)</option>
+              <option value="half">1-2 小時 (深度漫遊)</option>
+              <option value="long">半天以上 (豐富體驗)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Split Grid: Cards (Left 7 cols) & Interactive Map (Right 5 cols) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- SPOT CARDS LIST -->
+          <div class="lg:col-span-7 space-y-4" id="spotsContainer">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- INTERACTIVE VECTOR REGIONAL MAP -->
+          <div class="lg:col-span-5 sticky top-24">
+            <div class="bg-white rounded-2xl p-5 shadow-md border border-earth-200">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-brick-500 animate-ping"></span>
+                  <span class="font-heritage font-bold text-sm text-stone-800">六腳鄉行政村聚落示意地圖</span>
+                </div>
+                <span class="text-[11px] bg-stone-100 text-stone-600 px-2 py-0.5 rounded">點擊圖釘看景點</span>
+              </div>
+
+              <!-- Map Container -->
+              <div class="relative w-full h-[380px] bg-[#EFE9DC] rounded-xl border border-stone-200 overflow-hidden flex items-center justify-center">
+                <!-- SVG map of Liujiao Township schematic -->
+                <svg id="liujiaoSvgMap" viewBox="0 0 500 420" class="w-full h-full select-none">
+                  <defs>
+                    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e4dcce" stroke-width="1"/>
+                    </pattern>
+                  </defs>
+                  
+                  <rect width="100%" height="100%" fill="url(#grid)" />
+
+                  <!-- Liujiao Township Boundary Polygon -->
+                  <path d="M 70,120 L 150,60 L 290,50 L 410,110 L 440,210 L 370,350 L 240,380 L 110,340 L 50,230 Z" 
+                        fill="#F5EFE3" stroke="#D3C3A8" stroke-width="3.5" stroke-linejoin="round" />
+
+                  <!-- River Puzi Stream / Liujiao Drainage -->
+                  <path d="M 40,200 Q 180,180 260,260 T 450,280" fill="none" stroke="#A7C7E7" stroke-width="6" stroke-linecap="round" opacity="0.85" />
+                  <text x="310" y="275" font-size="10" fill="#46729B" font-family="'Noto Serif TC', serif" font-weight="bold">朴子溪流域</text>
+
+                  <!-- Roads / Route 19, Route 166 -->
+                  <path d="M 120,65 L 260,250 L 300,375" fill="none" stroke="#DFD5C6" stroke-width="4" stroke-dasharray="4,2" />
+                  <path d="M 60,190 L 430,170" fill="none" stroke="#DFD5C6" stroke-width="3" />
+
+                  <!-- Village Region Labels -->
+                  <g font-size="11" fill="#8C7A65" font-family="'Noto Serif TC', serif" font-weight="600" opacity="0.8">
+                    <text x="120" y="110">潭墘村</text>
+                    <text x="210" y="90">崩山村</text>
+                    <text x="320" y="130">蒜頭村</text>
+                    <text x="100" y="270">灣內村</text>
+                    <text x="280" y="330">六腳村</text>
+                    <text x="370" y="230">工廠村</text>
+                  </g>
+
+                  <!-- Dynamic Map Spot Markers generated in JS -->
+                  <g id="mapMarkersGroup"></g>
+                </svg>
+
+                <!-- Map Legend -->
+                <div class="absolute bottom-2 left-2 bg-white/90 backdrop-blur-xs px-2.5 py-1.5 rounded-lg border border-stone-200 text-[10px] space-y-1 text-stone-600 shadow-xs">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-brick-600 inline-block"></span>
+                    <span>文化與老厝</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-600 inline-block"></span>
+                    <span>糖廠與美食</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-paddy-600 inline-block"></span>
+                    <span>綠意自然生態</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selected Spot Quick Preview on Map -->
+              <div id="mapSelectedDetail" class="mt-3 p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="info" class="w-4 h-4 text-brick-600"></i>
+                  <span id="mapSelectedText" class="text-stone-700">點擊景點卡片或地圖標記，可檢視定位詳情</span>
+                </div>
+                <button id="mapSelectActionBtn" class="hidden text-brick-600 font-bold hover:underline" onclick="scrollToCurrentSelected()">
+                  移至卡片
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="calendar" class="py-16 bg-[#F4EFE6] border-b border-earth-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <div class="inline-flex items-center gap-2 text-brick-600 text-xs font-bold tracking-widest uppercase mb-1">
+            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+            SEASONAL CALENDAR & PRODUCE
+          </div>
+          <h2 class="font-heritage text-2xl sm:text-3xl font-black text-warmgray-900">
+            六腳風土四季曆：順應節氣的農村滋味
+          </h2>
+          <p class="text-stone-600 text-sm mt-2">
+            六腳地勢平坦、日照充沛。每年何時來，都有專屬的土地風物在等著您。
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Item 1: Garlic -->
+          <div class="bg-white rounded-2xl p-6 shadow-sm border border-earth-200 card-transition hover:-translate-y-1">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-3xl">🧄</span>
+              <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded-full">3月 - 5月 (盛產)</span>
+            </div>
+            <h3 class="font-heritage text-lg font-bold text-stone-900">六腳頂級大蒜</h3>
+            <p class="text-xs text-stone-500 mt-1 mb-3">蒜頭村、崩山村主要作物</p>
+            <p class="text-stone-600 text-xs leading-relaxed">
+              雖然蒜頭村地名由來據傳是「富裕商紳聚集的大戶村落」，但六腳大蒜風味嗆辣香濃，曬乾後極耐貯放，是老饕必掃貨的伴手禮。
+            </p>
+            <div class="mt-4 pt-3 border-t border-stone-100 text-[11px] text-brick-600 font-medium">
+              💡 推薦：老街周邊農家門前蒜瓣串
+            </div>
+          </div>
+
+          <!-- Item 2: Chin-Kong Peanuts -->
+          <div class="bg-white rounded-2xl p-6 shadow-sm border border-earth-200 card-transition hover:-translate-y-1">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-3xl">🥜</span>
+              <span class="text-xs bg-orange-100 text-orange-900 font-bold px-2.5 py-1 rounded-full">6月 & 11月 (兩作)</span>
+            </div>
+            <h3 class="font-heritage text-lg font-bold text-stone-900">古法黑金剛花生</h3>
+            <p class="text-xs text-stone-500 mt-1 mb-3">沙質壤土特產</p>
+            <p class="text-stone-600 text-xs leading-relaxed">
+              利用朴子溪流域肥沃沙質地種植，富含珍貴花青素。以柴火大鼎慢火炒焙，外殼薄脆、果仁香酥脆口，嚼後回甘。
+            </p>
+            <div class="mt-4 pt-3 border-t border-stone-100 text-[11px] text-brick-600 font-medium">
+              💡 推薦：三合院門埕傳統日曬現炒
+            </div>
+          </div>
+
+          <!-- Item 3: Chinaberry Blossom -->
+          <div class="bg-white rounded-2xl p-6 shadow-sm border border-earth-200 card-transition hover:-translate-y-1">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-3xl">🌸</span>
+              <span class="text-xs bg-purple-100 text-purple-900 font-bold px-2.5 py-1 rounded-full">3月 - 4月 (花季)</span>
+            </div>
+            <h3 class="font-heritage text-lg font-bold text-stone-900">苦楝花淡紫隧道</h3>
+            <p class="text-xs text-stone-500 mt-1 mb-3">朴子溪南岸自行車道</p>
+            <p class="text-stone-600 text-xs leading-relaxed">
+              長達數公里的綠色隧道，在初春時分綻放如雪般微紫小花，伴隨淡淡幽香，微風吹落如四月雪，宛如走入宮崎駿動畫。
+            </p>
+            <div class="mt-4 pt-3 border-t border-stone-100 text-[11px] text-brick-600 font-medium">
+              💡 推薦：清晨騎乘租賃腳踏車最清爽
+            </div>
+          </div>
+
+          <!-- Item 4: Sugar Cane & Sugar Railway -->
+          <div class="bg-white rounded-2xl p-6 shadow-sm border border-earth-200 card-transition hover:-translate-y-1">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-3xl">🚂</span>
+              <span class="text-xs bg-emerald-100 text-emerald-900 font-bold px-2.5 py-1 rounded-full">全年皆宜</span>
+            </div>
+            <h3 class="font-heritage text-lg font-bold text-stone-900">甘蔗與糖鐵冰品</h3>
+            <p class="text-xs text-stone-500 mt-1 mb-3">蒜頭糖廠文化園區</p>
+            <p class="text-stone-600 text-xs leading-relaxed">
+              走過日治全台第三大製糖廠的歷史光景，現在可搭乘「藍皮復古五分車」，品嚐經典酵母紅豆冰淇淋與純蔗糖甜品。
+            </p>
+            <div class="mt-4 pt-3 border-t border-stone-100 text-[11px] text-brick-600 font-medium">
+              💡 推薦：五分車延伸銜接嘉義高鐵站
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="info" class="py-16 bg-white border-b border-earth-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <div class="inline-flex items-center gap-2 text-brick-600 text-xs font-bold tracking-widest uppercase mb-1">
+              <i data-lucide="info" class="w-3.5 h-3.5"></i>
+              TRAVEL ESSENTIALS
+            </div>
+            <h2 class="font-heritage text-2xl sm:text-3xl font-black text-warmgray-900">
+              六腳旅行者筆記：交通與在地禮節
+            </h2>
+            <div class="space-y-4 mt-6 text-sm text-stone-600">
+              <div class="flex items-start gap-3 p-4 rounded-xl bg-stone-50 border border-stone-200/80">
+                <i data-lucide="train" class="w-5 h-5 text-brick-600 shrink-0 mt-0.5"></i>
+                <div>
+                  <h4 class="font-bold text-stone-900 mb-0.5">高鐵與大眾運輸直達</h4>
+                  <p class="text-xs leading-relaxed text-stone-600">
+                    搭乘台灣高鐵至「嘉義站」，可直接於高鐵站外搭乘「蒜糖五分車特種軌道客車」直抵蒜頭糖廠；亦可搭乘嘉義客運 7201、7202 抵達蒜頭村與各聚落。
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3 p-4 rounded-xl bg-stone-50 border border-stone-200/80">
+                <i data-lucide="car" class="w-5 h-5 text-brick-600 shrink-0 mt-0.5"></i>
+                <div>
+                  <h4 class="font-bold text-stone-900 mb-0.5">自行開車與聚落巷弄停車須知</h4>
+                  <p class="text-xs leading-relaxed text-stone-600">
+                    行駛國道一號接台82線快速道路下祥和交流道，約10分鐘即可抵達。鄉村聚落（如潭墘村老街）巷弄狹窄，建議將愛車停放在村莊外圍大廟前廣場，再徒步慢步進村，守護長者安寧。
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3 p-4 rounded-xl bg-stone-50 border border-stone-200/80">
+                <i data-lucide="heart-handshake" class="w-5 h-5 text-brick-600 shrink-0 mt-0.5"></i>
+                <div>
+                  <h4 class="font-bold text-stone-900 mb-0.5">尊重村民生活隱私</h4>
+                  <p class="text-xs leading-relaxed text-stone-600">
+                    六腳三合院仍有許多長者居住，拍攝古厝門楣或庭埕曬花生時，請親切道聲「借問／借翕相」，阿公阿嬤往往會熱情分享陳年往事。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick FAQ / Checklist Card -->
+          <div class="bg-[#FAF7F2] p-6 sm:p-8 rounded-3xl border border-earth-300 relative shadow-sm">
+            <h3 class="font-heritage text-xl font-bold text-stone-900 mb-4 flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-5 h-5 text-paddy-600"></i>
+              六腳一日慢活行李小清單
+            </h3>
+            <ul class="space-y-3 text-xs sm:text-sm text-stone-700">
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brick-600"></i>
+                遮陽防曬帽與防蚊液（溪畔綠蔭隧道生態豐富）
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brick-600"></i>
+                環保保溫袋（盛裝現炒黑金剛花生與糖廠冰棒）
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brick-600"></i>
+                悠遊卡或一卡通（租借微笑單車 YouBike 與搭乘五分車）
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brick-600"></i>
+                一顆放鬆沉靜的心，享受未經雕琢的質樸人情
+              </li>
+            </ul>
+
+            <div class="mt-8 p-4 bg-white rounded-2xl border border-stone-200 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-stone-900">需要即時旅遊諮詢？</div>
+                <div class="text-[11px] text-stone-500">嘉義縣六腳鄉公所觀光課</div>
+              </div>
+              <a href="tel:053780315" class="text-xs bg-stone-900 hover:bg-stone-800 text-white font-medium px-3 py-2 rounded-xl">
+                撥打諮詢
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside id="pocketDrawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white shadow-2xl border-l border-stone-200 transform translate-x-full transition-transform duration-300 flex flex-col">
+    <!-- Drawer Header -->
+    <div class="p-4 sm:p-5 border-b border-stone-200 bg-[#FAF7F2] flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-brick-500 text-white flex items-center justify-center">
+          <i data-lucide="bookmark-check" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <h3 class="font-heritage font-bold text-stone-900 text-base">我的六腳專屬行程 Pocket</h3>
+          <p class="text-[11px] text-stone-500">暫存個人想探訪的景點清單</p>
+        </div>
+      </div>
+      <button onclick="togglePocketDrawer(false)" class="p-2 rounded-lg text-stone-500 hover:text-stone-800 hover:bg-stone-200">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Drawer Body / Item List -->
+    <div id="pocketItemsContainer" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+      <!-- Empty state or list items rendered via JS -->
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="p-4 sm:p-5 border-t border-stone-200 bg-[#FAF7F2] space-y-3">
+      <div class="flex items-center justify-between text-xs text-stone-600">
+        <span>已選景點：<strong id="pocketTotalCount" class="text-brick-600">0</strong> 個</span>
+        <span>預估遊程時間：<strong id="pocketEstimatedTime" class="text-stone-900">0 小時</strong></span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="exportPocketPlan()" class="w-full flex items-center justify-center gap-1.5 bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold py-2.5 rounded-xl transition">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i> 複製行程清單
+        </button>
+        <button onclick="clearPocket()" class="w-full flex items-center justify-center gap-1.5 bg-stone-200 hover:bg-stone-300 text-stone-700 text-xs font-semibold py-2.5 rounded-xl transition">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 清空重選
+        </button>
+      </div>
+
+      <!-- Copied Feedback Toast -->
+      <div id="copyToast" class="hidden text-center text-xs text-emerald-800 bg-emerald-100 py-1.5 px-3 rounded-lg border border-emerald-300 transition-all">
+        已複製行程至剪貼簿！可貼至 LINE 或行事曆。
+      </div>
+    </div>
+  </aside>
+
+  <!-- Backdrop for Drawer -->
+  <div id="drawerBackdrop" onclick="togglePocketDrawer(false)" class="fixed inset-0 bg-stone-900/40 backdrop-blur-xs z-40 hidden transition-opacity"></div>
+
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-stone-200 px-4 py-2.5 flex items-center justify-between shadow-lg">
+    <a href="#spots" class="flex flex-col items-center text-stone-600 hover:text-brick-600">
+      <i data-lucide="compass" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">景點地圖</span>
+    </a>
+    <a href="#routes" class="flex flex-col items-center text-stone-600 hover:text-brick-600">
+      <i data-lucide="route" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">主題路線</span>
+    </a>
+    <a href="#calendar" class="flex flex-col items-center text-stone-600 hover:text-brick-600">
+      <i data-lucide="calendar" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">四季特產</span>
+    </a>
+    <button onclick="togglePocketDrawer(true)" class="flex items-center gap-1.5 bg-brick-600 text-white px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm">
+      <i data-lucide="bookmark" class="w-3.5 h-3.5"></i>
+      <span>行程 (<span id="mobilePocketCount">0</span>)</span>
+    </button>
+  </div>
+
+  <footer class="bg-warmgray-900 text-earth-100 py-12 border-t border-stone-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="text-center md:text-left">
+          <div class="font-heritage text-xl font-bold tracking-wider text-white">嘉義縣六腳鄉 ． 慢讀風土</div>
+          <p class="text-xs text-stone-400 mt-1">
+            Liujiao Township, Chiayi County, Taiwan — 漫遊老厝、大蒜之鄉與糖鐵歲月
+          </p>
+        </div>
+
+        <div class="flex items-center gap-6 text-xs text-stone-400">
+          <a href="#routes" class="hover:text-amber-200 transition">主題路線</a>
+          <a href="#spots" class="hover:text-amber-200 transition">景點探索</a>
+          <a href="#calendar" class="hover:text-amber-200 transition">節氣農產</a>
+          <a href="#info" class="hover:text-amber-200 transition">交通資訊</a>
+        </div>
+      </div>
+      <div class="mt-8 pt-6 border-t border-stone-800 text-center text-stone-400 text-xs">
+        <p>© 2026 慢行六腳 體驗設計實驗企劃 ． 探訪農村人文風土</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Spots Data Model
+    const LIUJIAO_SPOTS = [
+      {
+        id: 'spot-1',
+        name: '用九柑仔店拍攝地（慶和柑仔店旁老屋）',
+        village: '潭墘村',
+        category: 'nostalgia',
+        duration: 'quick',
+        durationHours: 1,
+        address: '嘉義縣六腳鄉潭墘村166縣道旁',
+        tags: ['偶像劇拍攝地', '復古打卡', '紅瓦土埆厝'],
+        bestTime: '午後 14:30 - 16:30（光影穿透木窗最美）',
+        transportTip: '建議車輛停放大廟池王廟廣場後步行2分鐘進村',
+        localTip: '拍完劇中柑仔店老屋外觀後，推薦走到隔壁真實營業中的百年慶和柑仔店跟闆娘買根枝仔冰聊聊天！',
+        summary: '因同名台漫改編電視劇《用九柑仔店》一夕成名，保留了濃郁台灣早期鄉村雜貨店的木質櫥櫃、糖果玻璃罐與舊瓦屋面。',
+        mapX: 130,
+        mapY: 100,
+        colorHex: '#C85A32'
+      },
+      {
+        id: 'spot-2',
+        name: '百年慶和柑仔店',
+        village: '潭墘村',
+        category: 'nostalgia',
+        duration: 'quick',
+        durationHours: 0.5,
+        address: '嘉義縣六腳鄉潭墘村79號',
+        tags: ['百年老店', '人情味', '古早童玩'],
+        bestTime: '全天營業 (07:00 - 19:00)',
+        transportTip: '距離用九拍攝地僅數十公尺',
+        localTip: '阿嬤自製的醃漬小點以及滿滿老式抽當、太空氣球，滿載上一代台灣人的童年回憶。',
+        summary: '真實守候潭墘村百餘年的生活補給站，是劇中柑仔店故事的真實原創精神寄託地。',
+        mapX: 140,
+        mapY: 115,
+        colorHex: '#C85A32'
+      },
+      {
+        id: 'spot-3',
+        name: '蒜頭糖廠蔗埕文化園區',
+        village: '工廠村',
+        category: 'sugar',
+        duration: 'long',
+        durationHours: 3,
+        address: '嘉義縣六腳鄉工廠村1號',
+        tags: ['糖鐵五分車', '百年木造火車站', '紅豆冰棒'],
+        bestTime: '週末 10:00 - 15:30（五分車班次密集）',
+        transportTip: '園區設有大型免費停車場；五分車直通嘉義高鐵站及故宮南院',
+        localTip: '五分車隨車導覽員妙語如珠，是認識嘉南平原糖業開墾史的絕佳活教室；下車一定要吃招牌酵母紅豆冰！',
+        summary: '建於日治明治39年(1906)，昔日為台灣第三大製糖工場，園區內擁有全木造日式車站、防空洞聚落與復古五分車巡禮。',
+        mapX: 375,
+        mapY: 220,
+        colorHex: '#B45309'
+      },
+      {
+        id: 'spot-4',
+        name: '朴子溪苦楝樹綠色隧道',
+        village: '灣內村/崩山村邊界',
+        category: 'nature',
+        duration: 'half',
+        durationHours: 1.5,
+        address: '嘉義縣六腳鄉朴子溪南堤防汛道路',
+        tags: ['全台最長苦楝道', '春季淡紫花', '單車秘境'],
+        bestTime: '3 - 4月苦楝盛開季；微風清晨或黃昏夕陽時分',
+        transportTip: '可於蒜頭糖廠租借自行車沿自行車道平順騎入',
+        localTip: '全長約2.5公里，兩側苦楝樹冠相連如綠色穹頂，微風吹來有幽微清香，拍照建議使用中長焦段壓縮景深。',
+        summary: '全台灣最長的苦楝花隧道之一，綠蔭筆直幽靜，春天微紫淡雅花瓣飄零宛若飛雪，吸引無數攝影愛好者專程朝聖。',
+        mapX: 250,
+        mapY: 270,
+        colorHex: '#466444'
+      },
+      {
+        id: 'spot-5',
+        name: '朴子溪黃金風鈴木步道',
+        village: '工廠村/安灣橋側',
+        category: 'nature',
+        duration: 'quick',
+        durationHours: 1,
+        address: '嘉義縣六腳鄉安灣橋朴子溪防汛道',
+        tags: ['春季限定金黃花海', '絕美空拍', '漫步拍照'],
+        bestTime: '2月底至3月中旬（視氣候花期約2週）',
+        transportTip: '花季人潮眾多，建議停放蒜糖園區步行至防汛道',
+        localTip: '盛花期堤防上一整片燦爛金黃落花如毯，搭配南台灣豔陽藍天極度上相。',
+        summary: '曾被譽為全台最狂暴風鈴木景點，盛開之時宛如金色長龍蜿蜒在朴子溪畔。',
+        mapX: 340,
+        mapY: 285,
+        colorHex: '#466444'
+      },
+      {
+        id: 'spot-6',
+        name: '蒜頭老街傳統黑金剛花生炒焙坊',
+        village: '蒜頭村',
+        category: 'food',
+        duration: 'quick',
+        durationHours: 0.5,
+        address: '嘉義縣六腳鄉蒜頭村街面',
+        tags: ['古法慢炒', '伴手禮', '花青素黑花生'],
+        bestTime: '上午 08:30 - 11:30（剛出爐最撲鼻香）',
+        transportTip: '蒜頭村老街街道緊湊，可短暫臨停街旁空地',
+        localTip: '可向老闆請教如何辨認純正黑金剛真偽，果仁上的深紫薄膜富含花青素，千萬不要剝掉吃！',
+        summary: '六腳鄉沙質壤土孕育出香氣特別厚實的落花生，傳承兩代老爐炭火炒香，是過路旅人不可錯過的在地真滋味。',
+        mapX: 315,
+        mapY: 135,
+        colorHex: '#B45309'
+      },
+      {
+        id: 'spot-7',
+        name: '蒜頭大眾爺廟前古早味羊肉羹與麵線',
+        village: '蒜頭村',
+        category: 'food',
+        duration: 'quick',
+        durationHours: 1,
+        address: '嘉義縣六腳鄉蒜頭村大眾爺廟旁',
+        tags: ['在地老饕小吃', '大蒜提味', '銅板美食'],
+        bestTime: '06:30 - 13:00（在地人的元氣早午餐）',
+        transportTip: '廟埕前腹地大，停車非常方便',
+        localTip: '一定要在羹湯裡加入店家特製的六腳蒜泥與五印醋，濃烈蒜辣更能襯托當歸羊肉的溫潤甜度。',
+        summary: '數十年在地老字號，用六腳在地自產頂級大蒜佐搭鮮嫩羊肉，是鄉民農作前後不可或缺的能量補給所。',
+        mapX: 300,
+        mapY: 155,
+        colorHex: '#B45309'
+      },
+      {
+        id: 'spot-8',
+        name: '崩山村三合院紅磚瓦厝聚落',
+        village: '崩山村',
+        category: 'nostalgia',
+        duration: 'half',
+        durationHours: 1.5,
+        address: '嘉義縣六腳鄉崩山村聚落周圍',
+        tags: ['閩南聚落建築', '農村曬蒜日常', '靜謐慢步'],
+        bestTime: '春秋清晨或午後斜陽',
+        transportTip: '建議騎乘單車悠晃，巷弄曲徑通幽',
+        localTip: '春末蒜頭採收期，幾乎每家三合院埕前都懸掛著蒜頭辮曬乾，空氣中瀰漫著天然蒜香，非常富有人情味。',
+        summary: '六腳鄉保留最完整的傳統閩南聚落之一，紅磚山牆、出屐起屋架與燕尾脊在此隨處可見，寧靜如世外桃源。',
+        mapX: 200,
+        mapY: 90,
+        colorHex: '#C85A32'
+      }
+    ];
+
+    let currentCategory = 'all';
+    let currentDuration = 'all';
+    let activeSpotId = null;
+    let tripPocket = [];
+
+    // Load pocket from localStorage
+    function loadPocket() {
+      try {
+        const saved = localStorage.getItem('liujiao_trip_pocket');
+        if (saved) {
+          tripPocket = JSON.parse(saved);
+        }
+      } catch (e) {
+        tripPocket = [];
+      }
+      updatePocketUI();
+    }
+
+    function savePocket() {
+      try {
+        localStorage.setItem('liujiao_trip_pocket', JSON.stringify(tripPocket));
+      } catch (e) {
+        // storage fallback
+      }
+      updatePocketUI();
+    }
+
+    function getFilteredSpots() {
+      return LIUJIAO_SPOTS.filter(spot => {
+        const matchCat = currentCategory === 'all' || spot.category === currentCategory;
+        const matchDuration = currentDuration === 'all' || spot.duration === currentDuration;
+        return matchCat && matchDuration;
+      });
+    }
+
+    function renderSpots() {
+      const container = document.getElementById('spotsContainer');
+      const filtered = getFilteredSpots();
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl p-8 text-center border border-earth-200">
+            <i data-lucide="map-pin-off" class="w-10 h-10 text-stone-400 mx-auto mb-3"></i>
+            <h4 class="font-heritage text-base font-bold text-stone-800">找不到符合條件的景點</h4>
+            <p class="text-xs text-stone-500 mt-1">請嘗試放寬篩選條件或重新選取類別。</p>
+            <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-stone-900 text-white rounded-xl text-xs font-semibold">重置所有篩選</button>
+          </div>
+        `;
+        lucide.createIcons();
+        renderMapMarkers();
+        return;
+      }
+
+      container.innerHTML = filtered.map(spot => {
+        const inPocket = tripPocket.some(item => item.id === spot.id);
+        const isActive = activeSpotId === spot.id;
+
+        return `
+          <div id="card-${spot.id}" class="card-transition bg-white rounded-2xl p-5 border ${isActive ? 'border-brick-600 ring-2 ring-brick-200 shadow-md' : 'border-earth-200 shadow-sm'} hover:shadow-md relative overflow-hidden"
+               onmouseenter="highlightMapPin('${spot.id}')" onclick="selectSpot('${spot.id}')">
+            
+            <div class="flex flex-col sm:flex-row items-start justify-between gap-3">
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-earth-100 text-earth-800 border border-earth-200">
+                    ${spot.village}
+                  </span>
+                  <span class="text-[11px] font-semibold px-2 py-0.5 rounded ${
+                    spot.category === 'nostalgia' ? 'bg-orange-50 text-orange-800 border border-orange-200' :
+                    spot.category === 'sugar' ? 'bg-amber-50 text-amber-800 border border-amber-200' :
+                    spot.category === 'nature' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' :
+                    'bg-rose-50 text-rose-800 border border-rose-200'
+                  }">
+                    ${
+                      spot.category === 'nostalgia' ? '影視古厝' :
+                      spot.category === 'sugar' ? '糖鐵文化' :
+                      spot.category === 'nature' ? '自然秘境' : '風味美食'
+                    }
+                  </span>
+                  <span class="text-[11px] text-stone-500 flex items-center gap-1">
+                    <i data-lucide="clock" class="w-3 h-3"></i> 建議約 ${spot.durationHours} 小時
+                  </span>
+                </div>
+                <h3 class="font-heritage text-lg sm:text-xl font-bold text-warmgray-900 pt-1">
+                  ${spot.name}
+                </h3>
+              </div>
+
+              <!-- Pocket Action Button -->
+              <button onclick="event.stopPropagation(); togglePocketItem('${spot.id}')" 
+                      class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
+                        inPocket 
+                          ? 'bg-brick-600 text-white shadow-xs hover:bg-brick-700' 
+                          : 'bg-stone-100 hover:bg-stone-200 text-stone-700'
+                      }">
+                <i data-lucide="${inPocket ? 'check' : 'plus'}" class="w-3.5 h-3.5"></i>
+                <span>${inPocket ? '已在 Pocket' : '加入行程'}</span>
+              </button>
+            </div>
+
+            <p class="text-xs sm:text-sm text-stone-600 mt-2.5 leading-relaxed">
+              ${spot.summary}
+            </p>
+
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-1.5 mt-3">
+              ${spot.tags.map(t => `<span class="text-[11px] bg-stone-50 text-stone-600 px-2 py-0.5 rounded border border-stone-200/60">#${t}</span>`).join('')}
+            </div>
+
+            <!-- Local Tips & Transport Accordion / Micro-card -->
+            <div class="mt-3.5 pt-3 border-t border-stone-100 space-y-1.5 text-xs">
+              <div class="flex items-start gap-1.5 text-stone-700">
+                <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5"></i>
+                <span class="leading-normal"><strong class="text-stone-900 font-medium">在地小撇步：</strong>${spot.localTip}</span>
+              </div>
+              <div class="flex items-start gap-1.5 text-stone-500 text-[11px]">
+                <i data-lucide="car" class="w-3.5 h-3.5 text-stone-400 shrink-0 mt-0.5"></i>
+                <span>${spot.transportTip}</span>
+              </div>
+            </div>
+
+            <!-- Footer Copy Address & Navigation -->
+            <div class="mt-3 pt-2.5 flex items-center justify-between text-xs text-stone-500 border-t border-stone-100">
+              <div class="flex items-center gap-1 truncate max-w-[70%]">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-stone-400 shrink-0"></i>
+                <span class="truncate">${spot.address}</span>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="event.stopPropagation(); copyAddress('${spot.address}')" class="text-stone-600 hover:text-brick-600 text-[11px] font-medium flex items-center gap-1 underline underline-offset-2">
+                  <i data-lucide="copy" class="w-3 h-3"></i> 複製地址
+                </button>
+                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('六腳鄉 ' + spot.name)}" 
+                   target="_blank" rel="noopener noreferrer"
+                   onclick="event.stopPropagation()"
+                   class="text-brick-600 hover:text-brick-700 text-[11px] font-semibold flex items-center gap-0.5">
+                  導航 <i data-lucide="external-link" class="w-3 h-3"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+      renderMapMarkers();
+    }
+
+    function renderMapMarkers() {
+      const markersGroup = document.getElementById('mapMarkersGroup');
+      const filtered = getFilteredSpots();
+      
+      markersGroup.innerHTML = filtered.map(spot => {
+        const isSelected = activeSpotId === spot.id;
+        const inPocket = tripPocket.some(item => item.id === spot.id);
+        
+        return `
+          <g id="marker-${spot.id}" class="cursor-pointer transition-all" onclick="selectSpot('${spot.id}')">
+            ${isSelected ? `
+              <circle cx="${spot.mapX}" cy="${spot.mapY}" r="16" fill="${spot.colorHex}" opacity="0.3" class="pulse-node" />
+            ` : ''}
+            <circle cx="${spot.mapX}" cy="${spot.mapY}" r="${isSelected ? 9 : 7}" fill="${spot.colorHex}" stroke="#FFFFFF" stroke-width="2" />
+            ${inPocket ? `
+              <circle cx="${spot.mapX + 5}" cy="${spot.mapY - 5}" r="3.5" fill="#1C1B19" stroke="#FFF" stroke-width="1" />
+            ` : ''}
+            <!-- Label -->
+            <text x="${spot.mapX + 10}" y="${spot.mapY + 4}" font-size="${isSelected ? 11 : 9.5}" font-weight="${isSelected ? 'bold' : 'normal'}" fill="${isSelected ? '#1C1B19' : '#4A3E30'}" font-family="'Noto Serif TC', serif">
+              ${spot.name.split('（')[0].slice(0, 7)}
+            </text>
+          </g>
+        `;
+      }).join('');
+    }
+
+    function highlightMapPin(spotId) {
+      activeSpotId = spotId;
+      renderMapMarkers();
+      updateMapDetailBar(spotId);
+    }
+
+    function selectSpot(spotId) {
+      activeSpotId = spotId;
+      renderSpots();
+      updateMapDetailBar(spotId);
+
+      // Scroll card into view gently if clicked on map
+      const targetCard = document.getElementById(`card-${spotId}`);
+      if (targetCard) {
+        targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function updateMapDetailBar(spotId) {
+      const spot = LIUJIAO_SPOTS.find(s => s.id === spotId);
+      const detailText = document.getElementById('mapSelectedText');
+      const actionBtn = document.getElementById('mapSelectActionBtn');
+      if (spot && detailText && actionBtn) {
+        detailText.innerHTML = `<strong>${spot.name}</strong> 位於 ${spot.village}（建議時長：${spot.durationHours} 小時）`;
+        actionBtn.classList.remove('hidden');
+      }
+    }
+
+    function scrollToCurrentSelected() {
+      if (!activeSpotId) return;
+      const targetCard = document.getElementById(`card-${activeSpotId}`);
+      if (targetCard) {
+        targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function setCategoryFilter(category) {
+      currentCategory = category;
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        if (btn.dataset.cat === category) {
+          btn.className = 'cat-pill active px-3.5 py-1.5 rounded-full text-xs font-semibold bg-stone-900 text-white transition-all';
+        } else {
+          btn.className = 'cat-pill px-3.5 py-1.5 rounded-full text-xs font-medium bg-stone-100 hover:bg-stone-200 text-stone-700 transition-all';
+        }
+      });
+      updateFilterBanner();
+      renderSpots();
+    }
+
+    function applyFilters() {
+      const select = document.getElementById('durationSelect');
+      currentDuration = select.value;
+      updateFilterBanner();
+      renderSpots();
+    }
+
+    function filterByThematicRoute(categoryKey) {
+      setCategoryFilter(categoryKey);
+      const spotsElem = document.getElementById('spots');
+      if (spotsElem) {
+        spotsElem.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function updateFilterBanner() {
+      const banner = document.getElementById('filterStatus');
+      const bannerText = document.getElementById('filterStatusText');
+      const isFiltered = currentCategory !== 'all' || currentDuration !== 'all';
+
+      if (isFiltered) {
+        banner.classList.remove('hidden');
+        banner.classList.add('inline-flex');
+        let text = '已套用：';
+        if (currentCategory !== 'all') {
+          const mapName = { nostalgia: '影視古厝', sugar: '糖鐵文化', nature: '自然秘境', food: '風味美食' };
+          text += `類別「${mapName[currentCategory]}」 `;
+        }
+        if (currentDuration !== 'all') {
+          const durMap = { quick: '1小時內', half: '1-2小時', long: '半天以上' };
+          text += `時長「${durMap[currentDuration]}」`;
+        }
+        bannerText.textContent = text;
+      } else {
+        banner.classList.add('hidden');
+        banner.classList.remove('inline-flex');
+      }
+    }
+
+    function resetFilters() {
+      currentCategory = 'all';
+      currentDuration = 'all';
+      document.getElementById('durationSelect').value = 'all';
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        if (btn.dataset.cat === 'all') {
+          btn.className = 'cat-pill active px-3.5 py-1.5 rounded-full text-xs font-semibold bg-stone-900 text-white transition-all';
+        } else {
+          btn.className = 'cat-pill px-3.5 py-1.5 rounded-full text-xs font-medium bg-stone-100 hover:bg-stone-200 text-stone-700 transition-all';
+        }
+      });
+      updateFilterBanner();
+      renderSpots();
+    }
+
+    function togglePocketItem(spotId) {
+      const index = tripPocket.findIndex(s => s.id === spotId);
+      if (index >= 0) {
+        tripPocket.splice(index, 1);
+      } else {
+        const spot = LIUJIAO_SPOTS.find(s => s.id === spotId);
+        if (spot) {
+          tripPocket.push(spot);
+        }
+      }
+      savePocket();
+      renderSpots();
+    }
+
+    function removePocketItem(spotId) {
+      tripPocket = tripPocket.filter(item => item.id !== spotId);
+      savePocket();
+      renderSpots();
+    }
+
+    function clearPocket() {
+      tripPocket = [];
+      savePocket();
+      renderSpots();
+    }
+
+    function updatePocketUI() {
+      const count = tripPocket.length;
+      document.getElementById('pocketCountBadge').textContent = count;
+      document.getElementById('mobilePocketCount').textContent = count;
+      document.getElementById('pocketTotalCount').textContent = count;
+
+      const totalHours = tripPocket.reduce((acc, curr) => acc + (curr.durationHours || 1), 0);
+      document.getElementById('pocketEstimatedTime').textContent = `${totalHours} 小時`;
+
+      const container = document.getElementById('pocketItemsContainer');
+      if (count === 0) {
+        container.innerHTML = `
+          <div class="h-64 flex flex-col items-center justify-center text-center p-6 text-stone-400">
+            <i data-lucide="map" class="w-10 h-10 mb-2 stroke-[1.5]"></i>
+            <p class="font-heritage text-sm font-bold text-stone-700">Pocket 目前還是空的</p>
+            <p class="text-xs text-stone-500 mt-1">在景點卡片點擊「加入行程」，規劃你的專屬六腳慢活散策日！</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = tripPocket.map((spot, idx) => `
+        <div class="bg-stone-50 rounded-xl p-3 border border-stone-200 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-3 overflow-hidden">
+            <span class="w-5 h-5 rounded-full bg-brick-500 text-white text-[10px] flex items-center justify-center font-bold shrink-0">
+              ${idx + 1}
+            </span>
+            <div class="truncate">
+              <div class="font-heritage text-xs font-bold text-stone-900 truncate">${spot.name}</div>
+              <div class="text-[11px] text-stone-500 flex items-center gap-2 mt-0.5">
+                <span>${spot.village}</span>
+                <span>•</span>
+                <span>約 ${spot.durationHours}h</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="removePocketItem('${spot.id}')" class="text-stone-400 hover:text-rose-600 p-1.5 transition">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function togglePocketDrawer(open) {
+      const drawer = document.getElementById('pocketDrawer');
+      const backdrop = document.getElementById('drawerBackdrop');
+      if (open) {
+        drawer.classList.remove('translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        drawer.classList.add('translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('openPocketBtn').addEventListener('click', () => togglePocketDrawer(true));
+
+    function copyAddress(address) {
+      const dummy = document.createElement("textarea");
+      document.body.appendChild(dummy);
+      dummy.value = address;
+      dummy.select();
+      document.execCommand("copy");
+      document.body.removeChild(dummy);
+
+      showToast(`已複製地址：${address}`);
+    }
+
+    function exportPocketPlan() {
+      if (tripPocket.length === 0) {
+        showToast('請先加入景點至 Pocket 喔！');
+        return;
+      }
+
+      let text = `【我的六腳慢活旅程清單】\n總停留景點：${tripPocket.length} 處\n預估時間：約 ${tripPocket.reduce((a,c)=>a+c.durationHours,0)} 小時\n\n`;
+      tripPocket.forEach((item, i) => {
+        text += `${i+1}. ${item.name} (${item.village})\n   - 停留：約 ${item.durationHours} 小時\n   - 地址：${item.address}\n   - 小撇步：${item.localTip}\n\n`;
+      });
+      text += `規劃自「慢行六腳」推薦指南 🌾`;
+
+      const dummy = document.createElement("textarea");
+      document.body.appendChild(dummy);
+      dummy.value = text;
+      dummy.select();
+      document.execCommand("copy");
+      document.body.removeChild(dummy);
+
+      const toast = document.getElementById('copyToast');
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3500);
+    }
+
+    function showToast(msg) {
+      let toastEl = document.getElementById('generalToast');
+      if (!toastEl) {
+        toastEl = document.createElement('div');
+        toastEl.id = 'generalToast';
+        toastEl.className = 'fixed bottom-16 md:bottom-6 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-xs px-4 py-2 rounded-full shadow-lg z-50 transition-opacity duration-300 pointer-events-none';
+        document.body.appendChild(toastEl);
+      }
+      toastEl.textContent = msg;
+      toastEl.style.opacity = '1';
+      setTimeout(() => {
+        toastEl.style.opacity = '0';
+      }, 2400);
+    }
+
+    // Initialize application on DOM loaded
+    window.addEventListener('DOMContentLoaded', () => {
+      loadPocket();
+      renderSpots();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

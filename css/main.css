@@ -1,5 +1,5 @@
 body {
-  margin: 0;
+  margin: 0px;
   padding-top: 80px; /* 避開 navbar */
   background-color: #2C2623; /* 溫潤的暖米白底色，不要純白刺眼 */
   color: #F7F4EE;
@@ -50,4 +50,39 @@ body {
 .text-only-btn:hover {
   color: #0066cc; /* 變色：例如變成藍色 */
   transform: translateY(3px); /* 下移：向下平移 3 像素 (px) */
+}
+
+/* 將 .dropdown-menu 相關的全部合在一起 */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 160px;
+  background: #F7F4EE;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 1001;
+
+  /* 合併 .dropdown-menu.show */
+  &.show {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 合併 .dropdown-menu a */
+  a {
+    padding: 12px 18px;
+    color: #7A7067;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.2s;
+
+    /* 合併 .dropdown-menu a:hover */
+    &:hover {
+      background: rgba(92, 61, 46, 0.1);
+      color: #2C2623; /* 滑鼠移上去顏色變深 */
+    }
+  }
 }

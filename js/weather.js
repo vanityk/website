@@ -49,7 +49,7 @@
       card.innerHTML = `
         <!-- 左側：簡易垂直概況 -->
         <div class="card-summary">
-          <span class="card-date">${day.date || '--'}</span>
+          <span class="card-date">${displayDate}</span>
           <span class="card-desc">${day.desc || '多雲'}</span>
           <span class="card-temp">${day.min_t}° ~ ${day.max_t}°</span>
           <span class="rain-tag">💧 ${day.rain || '0%'}</span>

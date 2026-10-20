@@ -9,7 +9,7 @@
     mountPoint.innerHTML = `
       <div class="weather-card-container">
         <div class="weather-header">
-          <h3 class="weather-title">📍 六腳鄉未來一週天氣預報</h3>
+          <h3 class="weather-title">六腳鄉未來一週天氣預報</h3>
           <span class="weather-hint">點選卡片橫向展開詳細預報</span>
         </div>
         <div class="weather-cards-row" id="weather-cards-row">

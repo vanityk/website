@@ -85,52 +85,69 @@ if (!$elements) {
 // 整理 7 天預報資料
 $dailyMap = [];
 
+// 1. 先用 MinT 或 MaxT 找出未來 7 天的所有獨立日期
+foreach ($elements as $elem) {
+    $elemName = $elem['ElementName'] ?? $elem['elementName'] ?? '';
+    if (in_array($elemName, ['MinT', 'minT', 'MaxT', 'maxT'])) {
+        $timeList = $elem['Time'] ?? $elem['time'] ?? [];
+        foreach ($timeList as $t) {
+            $startTime = $t['StartTime'] ?? $t['startTime'] ?? '';
+            $date = substr($startTime, 5, 5); // MM-DD
+            if ($date && !isset($dailyMap[$date])) {
+                $dailyMap[$date] = [
+                    'date' => $date,
+                    'min_t' => '--',
+                    'max_t' => '--',
+                    'desc' => '多雲',
+                    'full_desc' => '氣候穩定，請留意日夜溫差。',
+                    'rain' => '-',
+                    'uvi' => '普通',
+                    'comfort' => '舒適',
+                    'wind' => '微風'
+                ];
+            }
+        }
+    }
+}
+
+// 2. 將各項氣象數值填入對應的日期
 foreach ($elements as $elem) {
     $elemName = $elem['ElementName'] ?? $elem['elementName'] ?? '';
     $timeList = $elem['Time'] ?? $elem['time'] ?? [];
 
     foreach ($timeList as $t) {
         $startTime = $t['StartTime'] ?? $t['startTime'] ?? '';
-        $date = substr($startTime, 5, 5); // MM-DD
-        if (!$date) continue;
-
-        if (!isset($dailyMap[$date])) {
-            $dailyMap[$date] = [
-                'date' => $date,
-                'min_t' => '--',
-                'max_t' => '--',
-                'desc' => '多雲',
-                'full_desc' => '',
-                'rain' => '0%',
-                'uvi' => '正常',
-                'comfort' => '舒適',
-                'wind' => '微風'
-            ];
-        }
+        $date = substr($startTime, 5, 5);
+        if (!$date || !isset($dailyMap[$date])) continue;
 
         $valObj = $t['ElementValue'][0] ?? $t['elementValue'][0] ?? [];
         $val = $valObj['Value'] ?? $valObj['value'] ?? '';
 
         if (in_array($elemName, ['MinT', 'minT'])) {
-            $dailyMap[$date]['min_t'] = $val;
+            if ($dailyMap[$date]['min_t'] === '--' || (is_numeric($val) && (float)$val < (float)$dailyMap[$date]['min_t'])) {
+                $dailyMap[$date]['min_t'] = $val;
+            }
         } elseif (in_array($elemName, ['MaxT', 'maxT'])) {
-            $dailyMap[$date]['max_t'] = $val;
+            if ($dailyMap[$date]['max_t'] === '--' || (is_numeric($val) && (float)$val > (float)$dailyMap[$date]['max_t'])) {
+                $dailyMap[$date]['max_t'] = $val;
+            }
         } elseif (in_array($elemName, ['WeatherDescription', 'weatherDescription', 'Wx', 'wx'])) {
             $parts = explode('。', $val);
             $dailyMap[$date]['desc'] = mb_substr($parts[0] ?? '多雲', 0, 6);
-            $dailyMap[$date]['full_desc'] = $val;
-        } elseif (in_array($elemName, ['PoP12h', 'pop12h', 'PoP6h']) && trim($val) !== '') {
+            if (!empty($val)) $dailyMap[$date]['full_desc'] = $val;
+        } elseif (in_array($elemName, ['PoP12h', 'pop12h', 'PoP6h']) && trim($val) !== '' && $val !== ' ') {
             $dailyMap[$date]['rain'] = $val . '%';
-        } elseif (in_array($elemName, ['UVI', 'uvi'])) {
+        } elseif (in_array($elemName, ['UVI', 'uvi']) && trim($val) !== '') {
             $dailyMap[$date]['uvi'] = $val;
-        } elseif (in_array($elemName, ['CI', 'ci'])) {
+        } elseif (in_array($elemName, ['CI', 'ci']) && trim($val) !== '') {
             $dailyMap[$date]['comfort'] = $val;
-        } elseif (in_array($elemName, ['WS', 'ws'])) {
+        } elseif (in_array($elemName, ['WS', 'ws']) && trim($val) !== '') {
             $dailyMap[$date]['wind'] = $val . ' m/s';
         }
     }
 }
 
+// 確保精確取出前 7 天
 $forecastList = array_slice(array_values($dailyMap), 0, 7);
 
 $result = [

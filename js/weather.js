@@ -1,7 +1,7 @@
 // js/weather.js
 class WeatherWidget {
   constructor(options = {}) {
-    this.endpoint = options.endpoint || '/api/weather.php';
+    this.endpoint = options.endpoint || 'api/weather.php';
     this.descEl = document.getElementById(options.descId || 'wt-desc');
     this.tempEl = document.getElementById(options.tempId || 'wt-temp');
     this.rainEl = document.getElementById(options.rainId || 'wt-rain');

@@ -28,7 +28,6 @@ curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 避免樹莓派 CA 憑證過期造成連線中斷
 $response = curl_exec($ch);
 $curlError = curl_error($ch);
-curl_close($ch);
 
 if ($curlError) {
     http_response_code(500);

@@ -11,7 +11,6 @@ if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheTime)) {
     exit;
 }
 
-// 請求 F-D0047-033 (嘉義縣未來1週預報)
 $url = "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-033?Authorization={$apiKey}&locationName=" . urlencode('六腳鄉');
 
 $ch = curl_init();
@@ -26,40 +25,36 @@ $data = json_decode($response, true);
 
 if (!isset($data['success']) || $data['success'] !== 'true') {
     http_response_code(401);
-    echo json_encode(['status' => 'error', 'message' => '授權失敗或連線異常', 'raw' => $data], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['status' => 'error', 'message' => '授權失敗或連線異常'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-// 遞迴尋找六腳鄉的 WeatherElement
-$elements = null;
-
-function findLocationElements($node) {
+// 遞迴尋找 WeatherElement
+function findWeatherElements($node) {
     if (!is_array($node)) return null;
 
-    // 檢查當前節點是否就是六腳鄉的物件
     $name = $node['LocationName'] ?? $node['locationName'] ?? '';
     if (trim($name) === '六腳鄉') {
         return $node['WeatherElement'] ?? $node['weatherElement'] ?? null;
     }
 
-    // 若不是，繼續深入搜尋子陣列
-    foreach ($node as $key => $child) {
+    foreach ($node as $child) {
         if (is_array($child)) {
-            $result = findLocationElements($child);
-            if ($result !== null) return $result;
+            $res = findWeatherElements($child);
+            if ($res !== null) return $res;
         }
     }
     return null;
 }
 
-$elements = findLocationElements($data['records'] ?? []);
+$elements = findWeatherElements($data['records'] ?? []);
 
-// 如果搜尋六腳鄉沒找到（可能 API 已經自動濾過且沒放 LocationName），則直接抓第一組 WeatherElement
+// 備用：若過濾後沒有 LocationName，直接取第一個存在的 WeatherElement
 if (!$elements) {
     function findAnyWeatherElements($node) {
         if (!is_array($node)) return null;
-        if (isset($node['WeatherElement']) && is_array($node['WeatherElement'])) return $node['WeatherElement'];
-        if (isset($node['weatherElement']) && is_array($node['weatherElement'])) return $node['weatherElement'];
+        if (!empty($node['WeatherElement']) && is_array($node['WeatherElement'])) return $node['WeatherElement'];
+        if (!empty($node['weatherElement']) && is_array($node['weatherElement'])) return $node['weatherElement'];
         foreach ($node as $child) {
             if (is_array($child)) {
                 $res = findAnyWeatherElements($child);
@@ -71,83 +66,89 @@ if (!$elements) {
     $elements = findAnyWeatherElements($data['records'] ?? []);
 }
 
-// 仍找不到要素時輸出診斷
 if (!$elements) {
     http_response_code(500);
-    echo json_encode([
-        'status' => 'error',
-        'message' => '完全解析不到 WeatherElement',
-        'debug_structure' => array_keys($data['records']['Locations'][0] ?? [])
-    ], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['status' => 'error', 'message' => '找不到氣象要素'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-// 整理 7 天預報資料
 $dailyMap = [];
 
-// 1. 先用 MinT 或 MaxT 找出未來 7 天的所有獨立日期
+// 1. 第一步：先掃過所有要素的時間軸，只要看到日期就自動註冊進 dailyMap
 foreach ($elements as $elem) {
-    $elemName = $elem['ElementName'] ?? $elem['elementName'] ?? '';
-    if (in_array($elemName, ['MinT', 'minT', 'MaxT', 'maxT'])) {
-        $timeList = $elem['Time'] ?? $elem['time'] ?? [];
-        foreach ($timeList as $t) {
-            $startTime = $t['StartTime'] ?? $t['startTime'] ?? '';
-            $date = substr($startTime, 5, 5); // MM-DD
-            if ($date && !isset($dailyMap[$date])) {
-                $dailyMap[$date] = [
-                    'date' => $date,
-                    'min_t' => '--',
-                    'max_t' => '--',
-                    'desc' => '多雲',
-                    'full_desc' => '氣候穩定，請留意日夜溫差。',
-                    'rain' => '-',
-                    'uvi' => '普通',
-                    'comfort' => '舒適',
-                    'wind' => '微風'
-                ];
-            }
+    $timeList = $elem['Time'] ?? $elem['time'] ?? [];
+    foreach ($timeList as $t) {
+        $startTime = $t['StartTime'] ?? $t['startTime'] ?? $t['dataTime'] ?? '';
+        $date = substr($startTime, 5, 5); // 抓取 MM-DD
+        if ($date && !isset($dailyMap[$date])) {
+            $dailyMap[$date] = [
+                'date' => $date,
+                'min_t' => '--',
+                'max_t' => '--',
+                'desc' => '多雲',
+                'full_desc' => '天氣穩定，早晚留意日夜溫差。',
+                'rain' => '-',
+                'uvi' => '普通',
+                'comfort' => '舒適',
+                'wind' => '微風'
+            ];
         }
     }
 }
 
-// 2. 將各項氣象數值填入對應的日期
+// 2. 第二步：將數值填入對應日期（支援中英文所有要素名稱）
 foreach ($elements as $elem) {
     $elemName = $elem['ElementName'] ?? $elem['elementName'] ?? '';
     $timeList = $elem['Time'] ?? $elem['time'] ?? [];
 
     foreach ($timeList as $t) {
-        $startTime = $t['StartTime'] ?? $t['startTime'] ?? '';
+        $startTime = $t['StartTime'] ?? $t['startTime'] ?? $t['dataTime'] ?? '';
         $date = substr($startTime, 5, 5);
         if (!$date || !isset($dailyMap[$date])) continue;
 
-        $valObj = $t['ElementValue'][0] ?? $t['elementValue'][0] ?? [];
+        // 取出數值（相容 ElementValue 與 elementValue）
+        $valList = $t['ElementValue'] ?? $t['elementValue'] ?? [];
+        $valObj = $valList[0] ?? [];
         $val = $valObj['Value'] ?? $valObj['value'] ?? '';
 
-        if (in_array($elemName, ['MinT', 'minT'])) {
+        // 溫度：最低溫
+        if (in_array($elemName, ['MinT', 'minT', '最低溫度', 'MinTemperature'])) {
             if ($dailyMap[$date]['min_t'] === '--' || (is_numeric($val) && (float)$val < (float)$dailyMap[$date]['min_t'])) {
                 $dailyMap[$date]['min_t'] = $val;
             }
-        } elseif (in_array($elemName, ['MaxT', 'maxT'])) {
+        }
+        // 溫度：最高溫
+        elseif (in_array($elemName, ['MaxT', 'maxT', '最高溫度', 'MaxTemperature'])) {
             if ($dailyMap[$date]['max_t'] === '--' || (is_numeric($val) && (float)$val > (float)$dailyMap[$date]['max_t'])) {
                 $dailyMap[$date]['max_t'] = $val;
             }
-        } elseif (in_array($elemName, ['WeatherDescription', 'weatherDescription', 'Wx', 'wx'])) {
+        }
+        // 天氣概況
+        elseif (in_array($elemName, ['WeatherDescription', 'weatherDescription', 'Wx', 'wx', '天氣現象'])) {
             $parts = explode('。', $val);
             $dailyMap[$date]['desc'] = mb_substr($parts[0] ?? '多雲', 0, 6);
             if (!empty($val)) $dailyMap[$date]['full_desc'] = $val;
-        } elseif (in_array($elemName, ['PoP12h', 'pop12h', 'PoP6h']) && trim($val) !== '' && $val !== ' ') {
+        }
+        // 降雨機率
+        elseif (in_array($elemName, ['PoP12h', 'pop12h', 'PoP6h', '12小時降雨機率', '降雨機率']) && trim($val) !== '' && $val !== ' ') {
             $dailyMap[$date]['rain'] = $val . '%';
-        } elseif (in_array($elemName, ['UVI', 'uvi']) && trim($val) !== '') {
+        }
+        // 紫外線
+        elseif (in_array($elemName, ['UVI', 'uvi', '紫外線指數']) && trim($val) !== '') {
             $dailyMap[$date]['uvi'] = $val;
-        } elseif (in_array($elemName, ['CI', 'ci']) && trim($val) !== '') {
+        }
+        // 舒適度
+        elseif (in_array($elemName, ['CI', 'ci', '舒適度指數']) && trim($val) !== '') {
             $dailyMap[$date]['comfort'] = $val;
-        } elseif (in_array($elemName, ['WS', 'ws']) && trim($val) !== '') {
+        }
+        // 風速
+        elseif (in_array($elemName, ['WS', 'ws', '風速']) && trim($val) !== '') {
             $dailyMap[$date]['wind'] = $val . ' m/s';
         }
     }
 }
 
-// 確保精確取出前 7 天
+// 精確截取 7 天
 $forecastList = array_slice(array_values($dailyMap), 0, 7);
 
 $result = [

@@ -11,7 +11,6 @@ if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheTime)) {
     exit;
 }
 
-// 請求 F-D0047-033 (嘉義縣未來1週預報)
 $url = "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-033?Authorization={$apiKey}&locationName=" . urlencode('六腳鄉');
 
 $ch = curl_init();

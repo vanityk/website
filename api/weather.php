@@ -126,7 +126,10 @@ foreach ($elements as $elem) {
         // 天氣概況
         elseif (in_array($elemName, ['WeatherDescription', 'weatherDescription', 'Wx', 'wx', '天氣現象'])) {
             $parts = explode('。', $val);
-            $dailyMap[$date]['desc'] = mb_substr($parts[0] ?? '多雲', 0, 6);
+            $rawText = $parts[0] ?? '多雲';
+            preg_match('/^.{0,6}/u', $rawText, $matches);
+            $dailyMap[$date]['desc'] = $matches[0] ?? $rawText;
+
             if (!empty($val)) $dailyMap[$date]['full_desc'] = $val;
         }
         // 降雨機率

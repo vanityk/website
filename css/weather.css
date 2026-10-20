@@ -1,24 +1,24 @@
 /* css/weather.css */
 
-/* 外層半透明毛玻璃卡片 */
+/* 外層毛玻璃容器 */
 .weather-card-container {
   width: 100%;
-  max-width: 650px;
-  margin: 20px auto;
-  padding: 24px;
-  border-radius: 18px;
+  max-width: 980px;
+  margin: 25px auto;
+  padding: 22px 24px;
+  border-radius: 20px;
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   box-sizing: border-box;
 }
 
 .weather-header {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -31,57 +31,176 @@
   letter-spacing: 1px;
 }
 
-.weather-updated {
+.weather-hint {
   font-size: 0.8rem;
   opacity: 0.75;
 }
 
-/* 7天預報表格 */
-.weather-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 6px; /* 讓每一列獨立分開，方便做懸停浮動 */
+/* 7天橫向卡片列容器 */
+.weather-cards-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 8px 4px 14px 4px;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
-.weather-table th {
-  padding: 8px 12px;
-  font-size: 0.85rem;
-  opacity: 0.8;
-  font-weight: 500;
-  text-align: center;
+.weather-cards-row::-webkit-scrollbar {
+  height: 6px;
+}
+.weather-cards-row::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
 }
 
-.weather-table td {
-  padding: 12px 10px;
-  text-align: center;
-  font-size: 0.95rem;
-  background: rgba(255, 255, 255, 0.05); /* 預設微微半透底色 */
-  transition: all 0.25s ease-in-out;
-}
-
-/* 讓整行兩端保持圓角 */
-.weather-table tr td:first-child {
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-  font-weight: 600;
-}
-.weather-table tr td:last-child {
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
-/* 關鍵：滑鼠懸停（Hover）整行顏色加深、微放大 */
-.weather-table tbody tr:hover td {
-  background: rgba(0, 0, 0, 0.35); /* 顏色明顯變深 */
+/* 基礎每日卡片 */
+.weather-day-card {
+  flex: 0 0 110px; /* 預設收合寬度 */
+  min-width: 110px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: row;
   cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: flex 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              background 0.25s ease,
+              transform 0.2s ease,
+              border-color 0.25s ease;
 }
 
-.weather-table tbody tr:hover {
-  transform: translateY(-2px); /* 輕微上浮 2px */
-  transition: transform 0.2s ease;
+/* 滑鼠懸停微深與上浮 */
+.weather-day-card:hover {
+  background: rgba(0, 0, 0, 0.32);
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* 簡易預報視圖 (左側/收合時全部) */
+.card-summary {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.card-date {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.card-desc {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.card-temp {
+  font-size: 0.82rem;
+  opacity: 0.85;
 }
 
 .rain-tag {
   color: #79c0ff;
-  font-weight: 500;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* 展開詳細視圖 (右側抽屜) */
+.card-details {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 250px;
+  min-width: 250px;
+  padding-left: 16px;
+  margin-left: 14px;
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
+}
+
+/* 點擊當天：橫向展開狀態 */
+.weather-day-card.is-expanded {
+  flex: 0 0 380px; /* 橫向伸展至寬卡片 */
+  background: rgba(0, 0, 0, 0.52);
+  border-color: #79c0ff;
+  transform: translateY(0);
+  cursor: default;
+}
+
+.weather-day-card.is-expanded .card-summary {
+  width: 100px; /* 展開時簡易欄位靠左固定寬度 */
+}
+
+.weather-day-card.is-expanded .card-details {
+  display: flex;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 詳細面板數據網格 */
+.detail-items-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  font-size: 0.8rem;
+}
+
+.detail-item-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-item-label {
+  opacity: 0.65;
+  font-size: 0.72rem;
+  margin-bottom: 2px;
+}
+
+.detail-item-val {
+  font-weight: 600;
+  color: #e6edf3;
+}
+
+.detail-narrative {
+  font-size: 0.75rem;
+  opacity: 0.82;
+  line-height: 1.35;
+  margin: 8px 0 6px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 收合按鈕 */
+.btn-collapse-card {
+  align-self: flex-end;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-collapse-card:hover {
+  background: rgba(255, 255, 255, 0.35);
+  color: #fff;
 }

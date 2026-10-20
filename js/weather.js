@@ -2,129 +2,112 @@
 (function () {
   const API_ENDPOINT = 'api/weather.php';
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function initWeatherWidget() {
     const mountPoint = document.getElementById('weather-app');
     if (!mountPoint) return;
 
-    // 1. 自動注入骨架 HTML
     mountPoint.innerHTML = `
       <div class="weather-card-container">
         <div class="weather-header">
           <h3 class="weather-title">📍 六腳鄉未來一週天氣預報</h3>
-          <span class="weather-hint">點選任一日看詳細預報</span>
+          <span class="weather-hint">點選卡片橫向展開詳細預報</span>
         </div>
-        <table class="weather-table">
-          <thead>
-            <tr>
-              <th>日期</th>
-              <th>天氣狀況</th>
-              <th>氣溫區間</th>
-              <th>降雨機率</th>
-            </tr>
-          </thead>
-          <tbody id="forecast-body">
-            <tr><td colspan="4">資料載入中...</td></tr>
-          </tbody>
-        </table>
+        <div class="weather-cards-row" id="weather-cards-row">
+          <div style="padding: 20px; width: 100%; text-align: center; opacity: 0.75;">氣象資料讀取中...</div>
+        </div>
       </div>
     `;
 
-    const tableBody = document.getElementById('forecast-body');
+    const rowContainer = document.getElementById('weather-cards-row');
 
-    // 2. 抓取資料
     fetch(API_ENDPOINT)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('API 請求失敗');
+        return res.json();
+      })
       .then(data => {
-        if (data.status === 'success' && data.forecast) {
-          renderForecast(tableBody, data.forecast);
+        if (data.status === 'success' && Array.isArray(data.forecast) && data.forecast.length > 0) {
+          renderHorizontalCards(rowContainer, data.forecast);
         } else {
-          tableBody.innerHTML = `<tr><td colspan="4">暫無氣象資料</td></tr>`;
+          rowContainer.innerHTML = `<div style="padding: 20px; width: 100%; text-align: center;">暫無氣象預報資料</div>`;
         }
       })
       .catch(err => {
         console.error('Weather load error:', err);
-        tableBody.innerHTML = `<tr><td colspan="4">資料載入失敗</td></tr>`;
+        rowContainer.innerHTML = `<div style="padding: 20px; width: 100%; text-align: center; color: #ff7b72;">連線失敗，請檢查網路或 API。</div>`;
       });
-  });
+  }
 
-  // 3. 渲染每一天與展開抽屜
-  function renderForecast(tbody, list) {
-    tbody.innerHTML = '';
+  function renderHorizontalCards(container, list) {
+    container.innerHTML = '';
 
     list.forEach((day, index) => {
-      const rowId = `row-${index}`;
-      const drawerId = `drawer-${index}`;
+      const card = document.createElement('div');
+      card.className = 'weather-day-card';
+      card.id = `day-card-${index}`;
 
-      // 基本列
-      const tr = document.createElement('tr');
-      tr.className = 'weather-row';
-      tr.id = rowId;
-      tr.innerHTML = `
-        <td>${day.date}</td>
-        <td>${day.desc}</td>
-        <td>${day.min_t}°C ~ ${day.max_t}°C</td>
-        <td class="rain-tag">💧 ${day.rain}</td>
-      `;
+      card.innerHTML = `
+        <!-- 左側：簡易垂直概況 -->
+        <div class="card-summary">
+          <span class="card-date">${day.date || '--'}</span>
+          <span class="card-desc">${day.desc || '多雲'}</span>
+          <span class="card-temp">${day.min_t}° ~ ${day.max_t}°</span>
+          <span class="rain-tag">💧 ${day.rain || '0%'}</span>
+        </div>
 
-      // 展開抽屜
-      const detailTr = document.createElement('tr');
-      detailTr.className = 'detail-row';
-      detailTr.innerHTML = `
-        <td colspan="4">
-          <div class="detail-drawer" id="${drawerId}">
-            <div class="detail-grid">
-              <div class="detail-item">
-                <span class="detail-label">紫外線指數</span>
-                <span class="detail-val">☀️ ${day.uvi || '一般'}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">體感舒適度</span>
-                <span class="detail-val">🧘 ${day.comfort || '舒適'}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">風速</span>
-                <span class="detail-val">🍃 ${day.wind || '微風'}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">預估降雨率</span>
-                <span class="detail-val rain-tag">💧 ${day.rain}</span>
-              </div>
+        <!-- 右側：橫向展開詳細視圖 -->
+        <div class="card-details">
+          <div class="detail-items-grid">
+            <div class="detail-item-col">
+              <span class="detail-item-label">紫外線</span>
+              <span class="detail-item-val">☀️ ${day.uvi || '一般'}</span>
             </div>
-            <div class="detail-footer">
-              <p class="detail-desc">${day.full_desc || '當天無特殊天氣警示。'}</p>
-              <button class="btn-close-detail" type="button">收起 ▲</button>
+            <div class="detail-item-col">
+              <span class="detail-item-label">舒適度</span>
+              <span class="detail-item-val">🧘 ${day.comfort || '舒適'}</span>
+            </div>
+            <div class="detail-item-col">
+              <span class="detail-item-label">風速</span>
+              <span class="detail-item-val">🍃 ${day.wind || '微風'}</span>
+            </div>
+            <div class="detail-item-col">
+              <span class="detail-item-label">降雨率</span>
+              <span class="detail-item-val rain-tag">💧 ${day.rain || '0%'}</span>
             </div>
           </div>
-        </td>
+          <p class="detail-narrative">${day.full_desc || '全日氣候穩定，外出請隨時留意早晚溫差。'}</p>
+          <button type="button" class="btn-collapse-card">收起 ◀</button>
+        </div>
       `;
 
-      // 互動事件
-      tr.addEventListener('click', () => toggleDrawer(index));
-      detailTr.querySelector('.btn-close-detail').addEventListener('click', (e) => {
-        e.stopPropagation();
-        closeAllDrawers();
+      // 點擊卡片本體：切換展開狀態
+      card.addEventListener('click', () => {
+        if (!card.classList.contains('is-expanded')) {
+          // 先把其他已經展開的收合回去
+          document.querySelectorAll('.weather-day-card.is-expanded').forEach(c => {
+            c.classList.remove('is-expanded');
+          });
+          card.classList.add('is-expanded');
+
+          // 自動平滑滾動到視野中
+          card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
       });
 
-      tbody.appendChild(tr);
-      tbody.appendChild(detailTr);
+      // 關鍵修復：收合按鈕
+      const collapseBtn = card.querySelector('.btn-collapse-card');
+      collapseBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // 阻止事件向上冒泡到 card，避免卡片又被重新打開
+        card.classList.remove('is-expanded');
+      });
+
+      container.appendChild(card);
     });
   }
 
-  function toggleDrawer(index) {
-    const drawer = document.getElementById(`drawer-${index}`);
-    const row = document.getElementById(`row-${index}`);
-    const isOpen = drawer.classList.contains('open');
-
-    closeAllDrawers();
-
-    if (!isOpen) {
-      drawer.classList.add('open');
-      row.classList.add('active');
-    }
-  }
-
-  function closeAllDrawers() {
-    document.querySelectorAll('.detail-drawer').forEach(d => d.classList.remove('open'));
-    document.querySelectorAll('.weather-row').forEach(r => r.classList.remove('active'));
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWeatherWidget);
+  } else {
+    initWeatherWidget();
   }
 })();

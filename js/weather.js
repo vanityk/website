@@ -44,7 +44,7 @@
     list.forEach((day, index) => {
       const card = document.createElement('div');
       card.className = 'weather-day-card';
-      card.id = `day-card-${index}`;
+      card.id = `day/card-${index}`;
 
       card.innerHTML = `
         <!-- 左側：簡易垂直概況 -->

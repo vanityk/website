@@ -2,7 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 
-$apiKey = 'CWA-67B8A854-DD0D-44DD-B1CB-D0C31BD6E112'; // 你的授權碼
+$apiKey = 'CWA-67B8A854-DD0D-44DD-B1CB-D0C31BD6E112'; // 授權碼
 $cacheFile = __DIR__ . '/weather_cache_7days.json';
 $cacheTime = 3600;
 
@@ -49,7 +49,6 @@ function findWeatherElements($node) {
 
 $elements = findWeatherElements($data['records'] ?? []);
 
-// 備用：若過濾後沒有 LocationName，直接取第一個存在的 WeatherElement
 if (!$elements) {
     function findAnyWeatherElements($node) {
         if (!is_array($node)) return null;
@@ -74,7 +73,7 @@ if (!$elements) {
 
 $dailyMap = [];
 
-// 1. 第一步：先掃過所有要素的時間軸，只要看到日期就自動註冊進 dailyMap
+// 1. 建立日期清單
 foreach ($elements as $elem) {
     $timeList = $elem['Time'] ?? $elem['time'] ?? [];
     foreach ($timeList as $t) {
@@ -96,7 +95,7 @@ foreach ($elements as $elem) {
     }
 }
 
-// 2. 第二步：將數值填入對應日期（支援中英文所有要素名稱）
+// 2. 數值對應填入
 foreach ($elements as $elem) {
     $elemName = $elem['ElementName'] ?? $elem['elementName'] ?? '';
     $timeList = $elem['Time'] ?? $elem['time'] ?? [];
@@ -106,7 +105,6 @@ foreach ($elements as $elem) {
         $date = substr($startTime, 5, 5);
         if (!$date || !isset($dailyMap[$date])) continue;
 
-        // 取出數值（相容 ElementValue 與 elementValue）
         $valList = $t['ElementValue'] ?? $t['elementValue'] ?? [];
         $valObj = $valList[0] ?? [];
         $val = $valObj['Value'] ?? $valObj['value'] ?? '';
@@ -123,12 +121,10 @@ foreach ($elements as $elem) {
                 $dailyMap[$date]['max_t'] = $val;
             }
         }
-        // 天氣概況
+        // 天氣概況（直接取第一句，不依賴 mbstring/正則）
         elseif (in_array($elemName, ['WeatherDescription', 'weatherDescription', 'Wx', 'wx', '天氣現象'])) {
             $parts = explode('。', $val);
-            $rawText = $parts[0] ?? '多雲';
-            preg_match('/^.{0,6}/u', $rawText, $matches);
-            $dailyMap[$date]['desc'] = $matches[0] ?? $rawText;
+            $dailyMap[$date]['desc'] = trim($parts[0] ?? '多雲');
 
             if (!empty($val)) $dailyMap[$date]['full_desc'] = $val;
         }
@@ -151,7 +147,10 @@ foreach ($elements as $elem) {
     }
 }
 
-// 精確截取 7 天
+// 關鍵：將日期依升冪排序，確保天數順序正確
+ksort($dailyMap);
+
+// 精確截取未來 7 天
 $forecastList = array_slice(array_values($dailyMap), 0, 7);
 
 $result = [

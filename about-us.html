@@ -6,24 +6,68 @@
     <title>Document</title>
     <link rel="stylesheet" href="css/main.css">
     <style>
+        /* 左側滿版返回首頁按鈕 */
+        .side-back-btn {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100vh;
+            z-index: 1000;
+            
+            /* 置中中間的箭頭 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            
+            /* 半透明底色與高斯模糊 */
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-right: 1px solid rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            
+            /* 動畫過渡 */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* 繪製向左的箭頭（SVG） */
+        .side-back-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: #9b9b9b;
+            transition: transform 0.3s ease, fill 0.3s ease;
+        }
+
+        /* 滑鼠懸停互動效果 */
+        .side-back-btn:hover {
+            width: 130px; /* 寬度微幅伸展 */
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .side-back-btn:hover svg {
+            fill: #ffffff;
+            transform: translateX(-5px); /* 箭頭往左微移提示返回 */
+        }
+
         .highlight {
-            /* 設定初始狀態與平滑過渡 */
             font-weight: bold;
             background-color: transparent;
             transition: all 0.3s ease;
-            cursor: pointer; /* 讓滑鼠變成手指形狀，提示使用者可以互動 */
+            cursor: pointer;
             margin-bottom: 10px;
         }
 
         .highlight:hover {
-            color: #d32f2f;            /* 字體變紅 */
+            color: #d32f2f;
         }
 
-        /* 共享看板的樣式：放在 credits 下方 */
         #global-intro {
             font-size: 24px;
             color: #9b9b9b;
-            min-height: 40px;       /* 預留高度，沒字時也佔據空間，防止名字區塊上下劇烈跳動 */
+            min-height: 40px;
             margin: 20px auto 40px auto;
             max-width: 600px;
             text-align: center;
@@ -32,14 +76,22 @@
         }
     </style>
 </head>
-<body style="padding: 0px;">
+<body style="padding: 0px; margin: 0px;">
+
+    <!-- 左側滿版返回首頁按鈕（請將 href 改為你的首頁檔名，如 index.html 或 index.php） -->
+    <a href="index.html" class="side-back-btn" title="返回主頁" aria-label="返回主頁">
+        <svg viewBox="0 0 24 24">
+            <!-- 向左三角形 -->
+            <polygon points="16,4 6,12 16,20" />
+        </svg>
+    </a>
     
     <p style="font-size: 100px; text-align: center; margin-bottom: 10px;">credits</p>
     
     <!-- 1. 核心改動：在 credits 和名字中間放置唯一的共享看板 -->
     <div id="global-intro"></div>
 
-    <!-- 2. 名字列表：點擊時帶入兩個參數 (目前點擊的姓名標籤, 自我介紹內容) -->
+    <!-- 2. 名字列表 -->
     <div style="text-align: center;">
         <h1 class="highlight" onclick="showIntro(this, '大家好！我是郭奕竑，負責本次專案的 CSS 與 UI。')">1144529 郭奕竑</h1>
         <h1 class="highlight" onclick="showIntro(this, '哈囉！我是葉振甫，主要負責後端資料庫的串接與 API 邏輯開發。')">1144574 葉振甫</h1>
@@ -51,37 +103,33 @@
 
     <!-- JavaScript 切換與自動打字邏輯 -->
     <script>
-        var timer = null; // 用來儲存計時器，全域共用
-        var currentActiveUser = ""; // 用來記錄目前看板正在顯示誰的介紹
+        var timer = null;
+        var currentActiveUser = "";
 
         function showIntro(element, text) {
             var targetDiv = document.getElementById('global-intro');
-            var clickedUser = element.innerText; // 取得點擊的名字，例如 "1144529 郭奕竑"
+            var clickedUser = element.innerText;
 
-            // 每當有點擊，先強制清除正在運行的打字計時器，避免文字錯亂
             clearInterval(timer); 
 
-            // 核心邏輯判斷：如果再次點擊同一個人，就關閉（清空）
             if (currentActiveUser === clickedUser) {
                 targetDiv.innerHTML = "";
-                currentActiveUser = ""; // 重設記錄
-                return; // 結束執行
+                currentActiveUser = "";
+                return;
             }
 
-            // 如果是點擊新的人，先清空舊文字，再開啟打字機
             targetDiv.innerHTML = "";
-            currentActiveUser = clickedUser; // 記錄現在是誰在顯示
+            currentActiveUser = clickedUser;
 
             var index = 0;
-            // 啟動打字自動化計時器
             timer = setInterval(function() {
                 if (index < text.length) {
                     targetDiv.innerHTML += text.charAt(index);
                     index++;
                 } else {
-                    clearInterval(timer); // 字印完就關閉計時器
+                    clearInterval(timer);
                 }
-            }, 40); // 40毫秒印一個字
+            }, 40);
         }
     </script>
 </body>

@@ -16,9 +16,8 @@
             <nav style="display: flex; align-items: center; gap: 20px;">
                 <button class="text-only-btn" style="font-size: 15px;" onclick="location.href='about-us.html'">about us</button>
                 
-                <button class="text-only-btn" style="font-size: 15px;" onclick="openPaywallModal()">FAQ</button>
                 <div class="dropdown-wrapper">
-                    <button type="button" class="text-only-btn" style="font-size: 15px; padding-right: 10px;">語言language</button>
+                    <button type="button" class="text-only-btn" style="font-size: 15px; padding-right: 10px;">🌐︎language</button>
                     <div id="navDropdown" class="dropdown-menu">
                         <a href="#"onclick="openPaywallModal()">中文</a>
                         <a href="#"onclick="openPaywallModal()">English</a>
@@ -28,7 +27,7 @@
                 <div class="dropdown-wrapper">          
                     <button type="button" class="text-only-btn burger">≡</button>
                     <div id="navDropdown" class="dropdown-menu">
-                        <a href="#spot1">蒜頭糖廠</a>
+                        <a href="#spot1" onclick="openPaywallModal()">FAQ</a>
                         <a href="#spot2">苦楝樹隧道</a>
                         <a href="#spot3">黃花風鈴木</a>
                         <a href="#food">在地美食</a>
@@ -58,10 +57,11 @@
         
 
     <!-- 字體fade in out --><script src="js/scroll-effects.js"></script>
-    <!-- 載入廣告 --><script src="js/join_ncyu.js"></script><!-- 載入廣告 -->
+    <!-- 載入廣告 <script src="js/join_ncyu.js"></script> --><!-- 載入廣告 -->
     <!-- 付費視窗 --><script src="js/paywall.js"></script>
      <!-- main --><script src="js/main.js"></script>
-
+    <!-- 返回最上面--> <button onclick="window.scrollTo({top:0, behavior: 'smooth'})"  class="text-only-btn" 
+     style="position: fixed; bottom: 20px; right: 20px; background: none; border: none; cursor: pointer;" ><img src="pic_assest/網頁/scroll-up.png" style="filter: invert(1); width: 60px; height: 60px;"></button>
     <footer style="text-align: center; font-size: 10px;"><p>&copy; 2006-2026 版權所有 翻譯必究</p></footer>
 </body>
 </html>

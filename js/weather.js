@@ -1,4 +1,5 @@
 // js/weather.js
+alert("Weather JS 有被成功載入！");
 (function () {
   const API_ENDPOINT = 'api/weather.php';
 

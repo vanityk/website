@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discover Liujiao | 六腳鄉觀光導覽</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#16a34a',
+              600: '#15803d',
+              700: '#166534',
+              800: '#14532d',
+              gold: '#d97706',
+              amber: '#b45309'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans TC"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased font-sans flex flex-col min-h-screen">
+
+  <!-- ================= UX BROWSER SIMULATION BAR ================= -->
+  <aside aria-label="UX Prototype Navigation Bar" class="sticky top-0 z-50 bg-stone-900 text-stone-200 text-xs px-4 py-2 border-b border-stone-800 shadow-md">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center space-x-2">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="font-semibold text-stone-400">UX Simulated Path:</span>
+        <span id="current-url" class="font-mono bg-stone-800 text-emerald-400 px-2.5 py-0.5 rounded border border-stone-700">
+          xxxxx/en/website
+        </span>
+      </div>
+      <div class="flex items-center gap-2 text-stone-400">
+        <span>Route quick links:</span>
+        <button onclick="navigateTo('/en/website')" class="hover:text-emerald-400 underline underline-offset-2">/website</button>
+        <span>•</span>
+        <button onclick="navigateTo('/en/destinations')" class="hover:text-emerald-400 underline underline-offset-2">/destinations</button>
+        <span>•</span>
+        <button onclick="navigateTo('/en/faq')" class="hover:text-emerald-400 underline underline-offset-2">/faq</button>
+        <span>•</span>
+        <button onclick="navigateTo('/en/about-us')" class="hover:text-emerald-400 underline underline-offset-2">/about-us</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= HEADER BANNER ================= -->
+  <!-- 
+    UX Pseudocode:
+    Header Banner
+      Website Logo -> aref= Return to Main Homepage
+      Language -> Change to CN/EN
+      Hamburger Menu
+  -->
+  <header class="sticky top-[37px] z-40 bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-sm transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between">
+      
+      <!-- Website Logo (aref= Return to Main Homepage) -->
+      <a href="#home" onclick="navigateTo('/en/website'); return false;" class="group flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-brand-700/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="compass" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="font-bold text-lg leading-tight tracking-tight text-stone-900 group-hover:text-brand-700 transition-colors">
+            <span data-i18n="brand_title">LIUJIAO</span> <span class="text-brand-600 font-medium">六腳</span>
+          </div>
+          <p class="text-[11px] text-stone-500 tracking-wider uppercase font-medium" data-i18n="brand_subtitle">Chiayi Cultural Travel</p>
+        </div>
+      </a>
+
+      <!-- Desktop Nav & Actions -->
+      <div class="hidden md:flex items-center space-x-7">
+        <nav class="flex items-center space-x-6 text-sm font-medium text-stone-600">
+          <button onclick="navigateTo('/en/website')" class="hover:text-brand-600 transition-colors py-1" data-i18n="nav_home">Home</button>
+          <button onclick="navigateTo('/en/destinations')" class="hover:text-brand-600 transition-colors py-1" data-i18n="nav_destinations">Destinations</button>
+          <button onclick="navigateTo('/en/faq')" class="hover:text-brand-600 transition-colors py-1" data-i18n="nav_faq">FAQ</button>
+          <button onclick="navigateTo('/en/about-us')" class="hover:text-brand-600 transition-colors py-1" data-i18n="nav_about">About Us</button>
+        </nav>
+
+        <div class="h-5 w-px bg-stone-200"></div>
+
+        <!-- Language Switcher: Change to CN/EN -->
+        <div class="flex items-center bg-stone-100 rounded-lg p-0.5 border border-stone-200 text-xs font-semibold">
+          <button id="lang-en" onclick="setLanguage('en')" class="px-2.5 py-1 rounded-md bg-white text-stone-900 shadow-sm transition-all">EN</button>
+          <button id="lang-cn" onclick="setLanguage('cn')" class="px-2.5 py-1 rounded-md text-stone-500 hover:text-stone-900 transition-all">中文</button>
+        </div>
+      </div>
+
+      <!-- Hamburger Menu Button -->
+      <div class="flex items-center md:hidden gap-3">
+        <!-- Mobile Lang Toggle -->
+        <button onclick="toggleLanguage()" class="px-2 py-1 text-xs font-semibold bg-stone-100 border border-stone-200 rounded-md text-stone-700">
+          <span id="mobile-lang-indicator">EN / 中</span>
+        </button>
+        
+        <button id="hamburger-btn" onclick="toggleHamburger()" aria-label="Toggle Navigation Menu" class="p-2 text-stone-700 hover:text-brand-600 hover:bg-stone-100 rounded-xl focus:outline-none transition-colors">
+          <i data-lucide="menu" id="hamburger-icon" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= HAMBURGER MENU DRAWER ================= -->
+  <!-- 
+    UX Pseudocode:
+    Hamburger Menu
+      > Destinations aref=
+      > About Us aref=
+      > FAQ aref=
+  -->
+  <div id="mobile-menu" class="hidden md:hidden fixed inset-0 top-[89px] z-30 bg-stone-950/40 backdrop-blur-sm transition-opacity">
+    <div class="bg-white border-b border-stone-200 shadow-xl px-6 pt-5 pb-8 space-y-4">
+      <div class="text-xs uppercase tracking-wider text-stone-400 font-bold px-2" data-i18n="menu_label">Menu Navigation</div>
+      <div class="space-y-1">
+        <button onclick="mobileNavTo('/en/destinations')" class="w-full flex items-center justify-between p-3 rounded-xl text-stone-800 hover:bg-emerald-50 hover:text-brand-700 font-medium text-left transition-colors">
+          <div class="flex items-center gap-3">
+            <i data-lucide="map-pin" class="w-5 h-5 text-brand-600"></i>
+            <span data-i18n="menu_destinations">&gt; Destinations (景點導覽)</span>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-stone-400"></i>
+        </button>
+
+        <button onclick="mobileNavTo('/en/about-us')" class="w-full flex items-center justify-between p-3 rounded-xl text-stone-800 hover:bg-emerald-50 hover:text-brand-700 font-medium text-left transition-colors">
+          <div class="flex items-center gap-3">
+            <i data-lucide="info" class="w-5 h-5 text-brand-600"></i>
+            <span data-i18n="menu_about">&gt; About Us (關於我們)</span>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-stone-400"></i>
+        </button>
+
+        <button onclick="mobileNavTo('/en/faq')" class="w-full flex items-center justify-between p-3 rounded-xl text-stone-800 hover:bg-emerald-50 hover:text-brand-700 font-medium text-left transition-colors">
+          <div class="flex items-center gap-3">
+            <i data-lucide="help-circle" class="w-5 h-5 text-brand-600"></i>
+            <span data-i18n="menu_faq">&gt; FAQ (常見問題)</span>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-stone-400"></i>
+        </button>
+      </div>
+      
+      <div class="pt-2 border-t border-stone-100 flex justify-between items-center text-xs text-stone-500">
+        <span>Language Preference:</span>
+        <div class="flex gap-1">
+          <button onclick="setLanguage('en'); closeHamburger();" class="px-2 py-1 bg-stone-100 rounded text-stone-800 font-semibold">EN</button>
+          <button onclick="setLanguage('cn'); closeHamburger();" class="px-2 py-1 bg-stone-100 rounded text-stone-800 font-semibold">中文</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN CONTAINER WITH ROUTED VIEWS ================= -->
+  <main class="flex-grow">
+
+    <!-- ================= VIEW 1: MAIN HOMEPAGE (xxxxx/en/website) ================= -->
+    <div id="view-homepage" class="view-panel">
+
+      <!-- SECTION 1: Liujiao Introduction (Hero) -->
+      <section class="relative bg-gradient-to-b from-emerald-900/90 via-brand-800 to-stone-900 text-white overflow-hidden py-16 lg:py-24">
+        <!-- Decorative background shapes -->
+        <div class="absolute inset-0 opacity-15 pointer-events-none">
+          <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-brand-500 blur-3xl"></div>
+          <div class="absolute bottom-0 right-10 w-80 h-80 rounded-full bg-amber-400 blur-3xl"></div>
+        </div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-3xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-semibold uppercase tracking-wider mb-5">
+              <i data-lucide="map" class="w-3.5 h-3.5"></i>
+              <span data-i18n="intro_badge">Chiayi County, Taiwan • 六腳鄉</span>
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+              <span data-i18n="intro_heading">Heritage, Sugar Trains & Scenic Rural Trails</span>
+            </h1>
+            
+            <p class="text-base sm:text-lg text-stone-200 leading-relaxed mb-8" data-i18n="intro_desc">
+              Welcome to Liujiao (六腳鄉), a tranquil township nestled in the Chianan Plain of Chiayi County. Famous for the historic Suantou Sugar Factory, the gentle breezes along the Puzi River cycle path, and authentic local rural warmth.
+            </p>
+
+            <div class="flex flex-wrap gap-4">
+              <button onclick="navigateTo('/en/destinations')" class="px-6 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm shadow-lg shadow-brand-900/40 transition-all flex items-center gap-2">
+                <span data-i18n="explore_destinations">Explore All Destinations</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+              
+              <a href="#poi-section" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-sm backdrop-blur-sm border border-white/20 transition-all flex items-center gap-2">
+                <i data-lucide="compass" class="w-4 h-4"></i>
+                <span data-i18n="view_map_filter">Interactive Map & Filter</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: Destinations Featured Cards (Scroll down: - Destinations =aref) -->
+      <section class="py-14 bg-stone-100 border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+            <div>
+              <div class="text-xs font-bold uppercase tracking-wider text-brand-700" data-i18n="feat_subtitle">Featured Highlights</div>
+              <h2 class="text-2xl sm:text-3xl font-bold text-stone-900" data-i18n="feat_title">Destinations & Key Experiences</h2>
+            </div>
+            <button onclick="navigateTo('/en/destinations')" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800">
+              <span data-i18n="see_all_dest">View full catalog (xxxxx/en/destinations)</span>
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Featured Cards Grid matching UX:
+               - Destination point in Google Maps
+               - Destination approximate price
+               - Destination activities 
+          -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="home-featured-grid">
+            <!-- Dynamically injected via JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: Point of Interest Map and Filter -->
+      <!-- 
+        UX Pseudocode:
+        - Point of Interest Map and Filter
+        -   Destination Filter:
+        -   Type of activity
+              > Entertaining attractions
+              > Tourist spots
+              > Restaurants
+        -   Destination popularity
+        -     Filtered Destination
+      -->
+      <section id="poi-section" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-8">
+          <div class="text-xs font-bold uppercase tracking-wider text-brand-700" data-i18n="poi_subtitle">Interactive Explorer</div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-stone-900" data-i18n="poi_title">Point of Interest Map and Filter</h2>
+          <p class="text-stone-500 text-sm mt-1" data-i18n="poi_desc">Filter local Liujiao locations by activity type and popularity preference.</p>
+        </div>
+
+        <!-- Filter Controls Container -->
+        <div class="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm mb-8 space-y-5">
+          <div class="flex items-center gap-2 text-stone-800 font-bold text-sm pb-2 border-b border-stone-100">
+            <i data-lucide="sliders-horizontal" class="w-4 h-4 text-brand-600"></i>
+            <span data-i18n="filter_title">Destination Filter Controls</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
+            <!-- Type of Activity Filter -->
+            <div class="lg:col-span-7 space-y-2">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-stone-500" data-i18n="filter_activity_type">
+                Type of activity
+              </label>
+              <div class="flex flex-wrap gap-2" id="home-activity-filter">
+                <button type="button" onclick="setHomeActivityFilter('all')" data-val="all" class="home-act-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-brand-700 text-white transition-all">All Activities</button>
+                <button type="button" onclick="setHomeActivityFilter('entertaining')" data-val="entertaining" class="home-act-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200 transition-all">&gt; Entertaining attractions</button>
+                <button type="button" onclick="setHomeActivityFilter('tourist')" data-val="tourist" class="home-act-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200 transition-all">&gt; Tourist spots</button>
+                <button type="button" onclick="setHomeActivityFilter('restaurant')" data-val="restaurant" class="home-act-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200 transition-all">&gt; Restaurants</button>
+              </div>
+            </div>
+
+            <!-- Destination Popularity Filter -->
+            <div class="lg:col-span-5 space-y-2">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-stone-500" data-i18n="filter_popularity">
+                Destination popularity
+              </label>
+              <div class="flex gap-2" id="home-popularity-filter">
+                <button type="button" onclick="setHomePopularityFilter('all')" data-pop="all" class="home-pop-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-brand-700 text-white transition-all">All</button>
+                <button type="button" onclick="setHomePopularityFilter('bustling')" data-pop="bustling" class="home-pop-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200 transition-all">Bustling (熱鬧繁華)</button>
+                <button type="button" onclick="setHomePopularityFilter('peaceful')" data-pop="peaceful" class="home-pop-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200 transition-all">Peaceful (清幽寧靜)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Map & Filtered List Duo -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- Visual Map Simulation with Pins -->
+          <div class="lg:col-span-5 bg-stone-900 rounded-2xl p-5 text-white shadow-md relative overflow-hidden border border-stone-800">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2 text-xs font-semibold text-emerald-400">
+                <i data-lucide="map-pinned" class="w-4 h-4"></i>
+                <span data-i18n="map_preview_title">Liujiao Township Map representation</span>
+              </div>
+              <span class="text-[11px] bg-stone-800 text-stone-300 px-2 py-0.5 rounded font-mono">Google Maps Layer</span>
+            </div>
+
+            <!-- Stylized SVG Map of Liujiao Township with dynamic pins -->
+            <div class="relative w-full h-72 sm:h-80 bg-stone-800/80 rounded-xl overflow-hidden border border-stone-700/60 flex items-center justify-center">
+              <svg viewBox="0 0 500 400" class="w-full h-full object-cover opacity-60">
+                <!-- River: Puzi River -->
+                <path d="M 0,260 C 120,270 200,210 320,230 C 420,245 460,200 500,210" fill="none" stroke="#0284c7" stroke-width="12" stroke-linecap="round" opacity="0.6"/>
+                <text x="340" y="220" fill="#38bdf8" font-size="11" font-weight="bold">朴子溪 (Puzi River)</text>
+                
+                <!-- County boundary outlines mock -->
+                <path d="M 50,50 L 420,40 L 460,180 L 440,350 L 90,360 L 40,200 Z" fill="#1e293b" stroke="#334155" stroke-width="2" stroke-dasharray="4"/>
+                
+                <!-- Roads -->
+                <line x1="80" y1="50" x2="430" y2="350" stroke="#475569" stroke-width="3"/>
+                <line x1="250" y1="40" x2="250" y2="360" stroke="#475569" stroke-width="2"/>
+                <text x="210" y="70" fill="#94a3b8" font-size="10">台19線 (Provincial Hwy 19)</text>
+              </svg>
+
+              <!-- Map Pin Markers placed dynamically -->
+              <div id="map-pins-container" class="absolute inset-0 pointer-events-none">
+                <!-- Pins are rendered via JS according to current filtered data -->
+              </div>
+
+              <!-- Map Overlay Legend -->
+              <div class="absolute bottom-3 left-3 bg-stone-900/90 backdrop-blur-sm border border-stone-700 text-[11px] p-2 rounded-lg text-stone-300">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> <span>Active Location Pins</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-[11px] text-stone-400 mt-3 flex items-center gap-1">
+              <i data-lucide="info" class="w-3.5 h-3.5"></i>
+              <span data-i18n="map_hint">Click pins or list items to view full Google Maps coordinates and details.</span>
+            </p>
+          </div>
+
+          <!-- Filtered Destination List -->
+          <div class="lg:col-span-7 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-stone-500">
+                <span data-i18n="filtered_results">Filtered Destination</span> 
+                (<span id="filter-count">0</span>)
+              </span>
+              <button onclick="resetHomeFilters()" class="text-xs text-brand-700 hover:underline">Reset filters</button>
+            </div>
+
+            <div id="home-filtered-list" class="space-y-3">
+              <!-- Destination list cards injected dynamically -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ================= VIEW 2: DESTINATIONS SUBPAGE (xxxxx/en/destinations) ================= -->
+    <div id="view-destinations" class="view-panel hidden py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Top banner: Destination Name and Short Introduction -->
+      <div class="bg-gradient-to-r from-emerald-800 to-brand-700 rounded-3xl p-8 sm:p-12 text-white shadow-lg mb-10 relative overflow-hidden">
+        <div class="relative z-10 max-w-3xl">
+          <nav class="flex items-center gap-2 text-xs font-mono text-emerald-200 mb-3">
+            <button onclick="navigateTo('/en/website')" class="hover:underline">home</button>
+            <span>/</span>
+            <span class="text-white">destinations</span>
+          </nav>
+          <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3" data-i18n="dest_page_title">
+            Liujiao Destinations & Attractions
+          </h1>
+          <p class="text-emerald-100 text-sm sm:text-base leading-relaxed" data-i18n="dest_page_intro">
+            Comprehensive catalog of historic heritage, scenic river paths, and authentic culinary stops across Liujiao. Browse detailed prices, recommended activities, and Google Maps location coordinates below.
+          </p>
+        </div>
+        <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+          <i data-lucide="compass" class="w-72 h-72"></i>
+        </div>
+      </div>
+
+      <!-- Point of Interest Map and Filter (Destinations Specification):
+            Type of activity:
+              > Recreational
+              > Sightseeing
+              > Food:
+                > Local food
+                > Western food
+                > Snacks
+            Destination popularity:
+              > Bustling
+              > Peaceful
+                > Filtered Destination
+      -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- Filter Sidebar -->
+        <div class="lg:col-span-1 space-y-6 bg-white p-5 rounded-2xl border border-stone-200 shadow-sm h-fit">
+          <div class="flex items-center justify-between pb-3 border-b border-stone-100">
+            <h3 class="font-bold text-sm text-stone-900 flex items-center gap-2">
+              <i data-lucide="filter" class="w-4 h-4 text-brand-600"></i>
+              <span data-i18n="filter_criteria">Filter Criteria</span>
+            </h3>
+            <button onclick="resetDestPageFilters()" class="text-xs text-brand-700 hover:underline">Clear</button>
+          </div>
+
+          <!-- Type of Activity Filter -->
+          <div class="space-y-3">
+            <div class="text-xs font-bold text-stone-500 uppercase tracking-wider" data-i18n="activity_type_label">Type of activity</div>
+            
+            <div class="space-y-1.5 text-xs">
+              <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-stone-50">
+                <input type="radio" name="dest_activity" value="all" checked onchange="filterDestPage()" class="text-brand-600 focus:ring-brand-500">
+                <span class="font-medium text-stone-800">All Types</span>
+              </label>
+
+              <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-stone-50">
+                <input type="radio" name="dest_activity" value="recreational" onchange="filterDestPage()" class="text-brand-600 focus:ring-brand-500">
+                <span class="text-stone-700">&gt; Recreational (休閒)</span>
+              </label>
+
+              <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-stone-50">
+                <input type="radio" name="dest_activity" value="sightseeing" onchange="filterDestPage()" class="text-brand-600 focus:ring-brand-500">
+                <span class="text-stone-700">&gt; Sightseeing (觀光)</span>
+              </label>
+
+              <!-- Food Subcategories -->
+              <div class="pl-4 border-l-2 border-stone-200 mt-2 space-y-1">
+                <div class="text-[11px] font-semibold text-stone-400">&gt; Food (美食)</div>
+                <label class="flex items-center gap-2 cursor-pointer p-1 rounded hover:bg-stone-50">
+                  <input type="radio" name="dest_activity" value="food_local" onchange="filterDestPage()" class="text-brand-600 focus:ring-brand-500">
+                  <span class="text-stone-600">&gt; Local food (在地小吃)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer p-1 rounded hover:bg-stone-50">
+                  <input type="radio" name="dest_activity" value="food_western" onchange="filterDestPage()" class="text-brand-600 focus:ring-brand-500">
+                  <span class="text-stone-600">&gt; Western food (西式料理)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer p-1 rounded hover:bg-stone-50">
+                  <input type="radio" name="dest_activity" value="food_snack" onchange="filterDestPage()" class="text-brand-600 focus:ring-brand-500">
+                  <span class="text-stone-600">&gt; Snacks (特色點心)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Destination Popularity Filter -->
+          <div class="space-y-3 pt-3 border-t border-stone-100">
+            <div class="text-xs font-bold text-stone-500 uppercase tracking-wider" data-i18n="popularity_label">Destination popularity</div>
+            <div class="space-y-1.5 text-xs">
+              <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-stone-50">
+                <input type="radio" name="dest_pop" value="all" checked onchange="filterDestPage()" class="text-brand-600 focus:ring-brand-500">
+                <span class="font-medium text-stone-800">All Levels</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-stone-50">
+                <input type="radio" name="dest_pop" value="bustling" onchange="filterDestPage()" class="text-brand-600 focus:ring-brand-500">
+                <span class="text-stone-700">&gt; Bustling (熱鬧繁華)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-stone-50">
+                <input type="radio" name="dest_pop" value="peaceful" onchange="filterDestPage()" class="text-brand-600 focus:ring-brand-500">
+                <span class="text-stone-700">&gt; Peaceful (清幽寧靜)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filtered Destination Content -->
+        <div class="lg:col-span-3 space-y-4">
+          <div class="flex items-center justify-between text-xs text-stone-500">
+            <span>Showing <strong id="dest-total-count" class="text-stone-800 font-semibold">0</strong> destinations</span>
+            <span class="font-mono text-[11px] bg-stone-100 px-2 py-1 rounded">UX: Filtered Destination</span>
+          </div>
+
+          <!-- Grid of items displaying:
+               - Destination Name and Short Introduction
+               - Destination point in Google Maps
+               - Destination approximate price
+               - Destination activities 
+          -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="dest-page-grid">
+            <!-- Cards generated dynamically -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= VIEW 3: FAQ SUBPAGE (xxxxx/en/faq) ================= -->
+    <div id="view-faq" class="view-panel hidden py-12 max-w-4xl mx-auto px-4 sm:px-6">
+      
+      <div class="text-center mb-10">
+        <nav class="flex items-center justify-center gap-2 text-xs font-mono text-stone-400 mb-2">
+          <button onclick="navigateTo('/en/website')" class="hover:underline">home</button>
+          <span>/</span>
+          <span class="text-brand-700 font-medium">faq</span>
+        </nav>
+        <h1 class="text-3xl font-extrabold text-stone-900 tracking-tight" data-i18n="faq_title">Frequently Asked Questions</h1>
+        <p class="text-stone-500 text-sm mt-2" data-i18n="faq_subtitle">Everything you need to know when planning a trip to Liujiao Township.</p>
+      </div>
+
+      <div class="space-y-3" id="faq-accordion-container">
+        <!-- FAQ item 1 -->
+        <div class="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm">
+          <button onclick="toggleFaq(1)" class="w-full flex items-center justify-between p-4 text-left font-semibold text-stone-800 hover:text-brand-700 transition-colors">
+            <span data-i18n="faq_q1">How do I get to Liujiao Township from Chiayi High-Speed Rail (HSR) Station?</span>
+            <i data-lucide="chevron-down" id="faq-icon-1" class="w-5 h-5 text-stone-400 transition-transform"></i>
+          </button>
+          <div id="faq-ans-1" class="hidden px-4 pb-4 text-stone-600 text-sm leading-relaxed border-t border-stone-100 pt-3" data-i18n="faq_a1">
+            Liujiao is located adjacent to Chiayi HSR Station. You can take Chiayi County Bus No. 7307 or 7308 directly to Suantou Sugar Factory in about 10–15 minutes, or take a convenient taxi ride (approx. NT$150–200). Bicycle rentals and YouBike 2.0 stations are also available nearby.
+          </div>
+        </div>
+
+        <!-- FAQ item 2 -->
+        <div class="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm">
+          <button onclick="toggleFaq(2)" class="w-full flex items-center justify-between p-4 text-left font-semibold text-stone-800 hover:text-brand-700 transition-colors">
+            <span data-i18n="faq_q2">What is the approximate budget for a day trip in Liujiao?</span>
+            <i data-lucide="chevron-down" id="faq-icon-2" class="w-5 h-5 text-stone-400 transition-transform"></i>
+          </button>
+          <div id="faq-ans-2" class="hidden px-4 pb-4 text-stone-600 text-sm leading-relaxed border-t border-stone-100 pt-3" data-i18n="faq_a2">
+            Most nature and heritage sites (such as the Puzi River Bike Trail and Tanqian Historic Courtyards) are free of charge. Suantou Sugar Train rides cost approximately NT$100–150. A full day including local lunch, shaved ice, and bike rental generally costs between NT$300 to NT$600 per person.
+          </div>
+        </div>
+
+        <!-- FAQ item 3 -->
+        <div class="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm">
+          <button onclick="toggleFaq(3)" class="w-full flex items-center justify-between p-4 text-left font-semibold text-stone-800 hover:text-brand-700 transition-colors">
+            <span data-i18n="faq_q3">Can I rent bicycles locally for the Puzi River Cycle Path?</span>
+            <i data-lucide="chevron-down" id="faq-icon-3" class="w-5 h-5 text-stone-400 transition-transform"></i>
+          </button>
+          <div id="faq-ans-3" class="hidden px-4 pb-4 text-stone-600 text-sm leading-relaxed border-t border-stone-100 pt-3" data-i18n="faq_a3">
+            Yes! Bike rental shops are conveniently located right at the entrance of Suantou Sugar Factory. Tandem bikes, regular road bikes, and electric bikes are available for hourly or whole-day rental.
+          </div>
+        </div>
+
+        <!-- FAQ item 4 -->
+        <div class="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm">
+          <button onclick="toggleFaq(4)" class="w-full flex items-center justify-between p-4 text-left font-semibold text-stone-800 hover:text-brand-700 transition-colors">
+            <span data-i18n="faq_q4">What are the must-eat local specialty foods?</span>
+            <i data-lucide="chevron-down" id="faq-icon-4" class="w-5 h-5 text-stone-400 transition-transform"></i>
+          </button>
+          <div id="faq-ans-4" class="hidden px-4 pb-4 text-stone-600 text-sm leading-relaxed border-t border-stone-100 pt-3" data-i18n="faq_a4">
+            Do not miss Suantou Sugar Factory’s red bean ice cream with condensed milk, traditional Liujiao sesame biscuits, and the famous mutton noodles and duck soup along the old village market streets.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= VIEW 4: ABOUT US SUBPAGE (xxxxx/en/about-us) ================= -->
+    <div id="view-about-us" class="view-panel hidden py-12 max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-8">
+        <nav class="flex items-center justify-center gap-2 text-xs font-mono text-stone-400 mb-2">
+          <button onclick="navigateTo('/en/website')" class="hover:underline">home</button>
+          <span>/</span>
+          <span class="text-brand-700 font-medium">about-us</span>
+        </nav>
+        <h1 class="text-3xl font-extrabold text-stone-900 tracking-tight" data-i18n="about_title">About This Project</h1>
+        <p class="text-stone-500 text-sm mt-2" data-i18n="about_subtitle">Academic Collaboration & Cultural Tourism Digital Initiative</p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm space-y-6">
+        <div class="flex items-center gap-4 border-b border-stone-100 pb-6">
+          <div class="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-200 flex items-center justify-center text-brand-700">
+            <i data-lucide="graduation-cap" class="w-7 h-7"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-stone-900" data-i18n="about_univ">National Chiayi University (NCYU)</h2>
+            <p class="text-xs text-stone-500" data-i18n="about_dept">Department of Information Management (國立嘉義大學資訊管理學系)</p>
+          </div>
+        </div>
+
+        <p class="text-stone-600 text-sm leading-relaxed" data-i18n="about_text_p1">
+          This digital prototype serves as an integrated tourism portal designed for Liujiao Township (嘉義縣六腳鄉). It implements a user experience (UX) architectural model engineered to connect visitors with local attractions, route planning, budget estimates, and interactive map filtering.
+        </p>
+
+        <div class="bg-emerald-50/70 border border-emerald-200/60 rounded-xl p-5">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-brand-800 mb-1" data-i18n="about_redirect_spec">Official Department Link (UX aref Target)</h3>
+          <p class="text-xs text-stone-600 mb-4" data-i18n="about_redirect_desc">
+            As defined in the functional pseudocode: <code class="bg-white px-1.5 py-0.5 rounded text-emerald-800 font-mono">aref= https://misweb.ncyu.edu.tw/index.html</code>
+          </p>
+          <a href="https://misweb.ncyu.edu.tw/index.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-700 hover:bg-brand-800 text-white rounded-xl text-xs font-semibold shadow-sm transition-all">
+            <span data-i18n="visit_ncyu">Visit NCYU MIS Official Webpage</span>
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= DESTINATION DETAIL MODAL (xxxxx/en/destinations/:id) ================= -->
+  <!-- 
+    UX Pseudocode:
+    xxxxx/en/destinations/xxxxx
+    Card click (=aref) triggers destination detailed information
+  -->
+  <div id="dest-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/60 backdrop-blur-sm animate-fadeIn">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-stone-200 custom-scrollbar">
+      
+      <!-- Modal Header -->
+      <div class="relative h-48 bg-stone-800 text-white p-6 flex flex-col justify-end overflow-hidden">
+        <div id="modal-bg-gradient" class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-900/60 to-transparent"></div>
+        <button onclick="closeModal()" aria-label="Close dialog" class="absolute top-4 right-4 p-2 bg-stone-900/60 hover:bg-stone-900 text-stone-200 rounded-full transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <div class="relative z-10">
+          <div id="modal-category" class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-brand-600 text-white mb-2">Category</div>
+          <h2 id="modal-title" class="text-2xl font-bold">Destination Name</h2>
+          <div id="modal-route" class="text-xs font-mono text-stone-400">xxxxx/en/destinations/id</div>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-6">
+        
+        <!-- Short Introduction -->
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-1" data-i18n="modal_intro_title">Introduction</h3>
+          <p id="modal-desc" class="text-stone-700 text-sm leading-relaxed"></p>
+        </div>
+
+        <!-- 3 Core UX items: Google Maps, Approx Price, Activities -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-stone-50 rounded-xl border border-stone-200">
+          
+          <!-- Destination point in Google Maps -->
+          <div class="space-y-1">
+            <div class="flex items-center gap-1.5 text-xs font-semibold text-stone-500">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-red-500"></i>
+              <span>Google Maps Point</span>
+            </div>
+            <div id="modal-coords" class="text-xs font-mono text-stone-800 font-medium">23.5042° N, 120.3015° E</div>
+            <a id="modal-gmaps-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-[11px] text-brand-700 hover:underline">
+              <span>Open in Google Maps</span>
+              <i data-lucide="external-link" class="w-3 h-3"></i>
+            </a>
+          </div>
+
+          <!-- Destination approximate price -->
+          <div class="space-y-1">
+            <div class="flex items-center gap-1.5 text-xs font-semibold text-stone-500">
+              <i data-lucide="tag" class="w-3.5 h-3.5 text-amber-500"></i>
+              <span>Approximate Price</span>
+            </div>
+            <div id="modal-price" class="text-sm font-bold text-stone-900">Free admission</div>
+            <div class="text-[11px] text-stone-500" data-i18n="modal_price_note">Per person estimate</div>
+          </div>
+
+          <!-- Destination activities -->
+          <div class="space-y-1">
+            <div class="flex items-center gap-1.5 text-xs font-semibold text-stone-500">
+              <i data-lucide="activity" class="w-3.5 h-3.5 text-brand-600"></i>
+              <span>Destination Activities</span>
+            </div>
+            <div id="modal-activities" class="text-xs text-stone-700 font-medium leading-relaxed">Cycling, Train tour</div>
+          </div>
+
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+          <button onclick="closeModal()" class="px-5 py-2 rounded-xl text-xs font-semibold bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors">
+            Close
+          </button>
+          <a id="modal-nav-button" href="#" target="_blank" rel="noopener noreferrer" class="px-5 py-2 rounded-xl text-xs font-semibold bg-brand-700 hover:bg-brand-800 text-white flex items-center gap-1.5 shadow-sm transition-all">
+            <i data-lucide="navigation" class="w-3.5 h-3.5"></i>
+            <span>Navigate Now</span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= BACK-TO-TOP FOOTER ================= -->
+  <!-- 
+    UX Pseudocode:
+    Back-to-Top Footer
+      Click (↑) arrow to return to top page
+      About Us aref=
+      FAQ aref=
+      Contact info aref= NCYU Mis Webpage
+  -->
+  <footer class="bg-stone-900 text-stone-300 border-t border-stone-800 mt-auto">
+    <!-- Smooth Return-to-Top Bar -->
+    <div class="border-b border-stone-800">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center text-xs">
+        <span class="text-stone-400">Liujiao Township Tourism Web Prototype</span>
+        <!-- Click (↑) arrow to return to top page -->
+        <button onclick="scrollToTop()" class="group flex items-center gap-2 text-stone-300 hover:text-white px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 transition-colors">
+          <span data-i18n="back_to_top">Back to Top</span>
+          <span class="w-5 h-5 rounded-full bg-stone-700 group-hover:bg-brand-600 text-white flex items-center justify-center font-bold text-xs transition-colors">↑</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Footer Links matching UX spec -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        
+        <!-- Logo & summary -->
+        <div class="md:col-span-2 space-y-3">
+          <div class="flex items-center gap-2 text-white font-bold text-lg">
+            <i data-lucide="compass" class="w-5 h-5 text-emerald-400"></i>
+            <span>Liujiao Tourism UX System</span>
+          </div>
+          <p class="text-xs text-stone-400 max-w-sm leading-relaxed" data-i18n="footer_summary">
+            A research prototype adhering to hierarchical UX pseudocode structure: Header Banner, Hamburger navigation, POI Map Filtering, and subpage redirects.
+          </p>
+        </div>
+
+        <!-- Quick Links: About Us aref=, FAQ aref= -->
+        <div class="space-y-2">
+          <div class="text-xs font-bold uppercase tracking-wider text-stone-400">Navigation (aref=)</div>
+          <ul class="space-y-1.5 text-xs">
+            <li>
+              <button onclick="navigateTo('/en/about-us')" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-stone-500"></i>
+                <span data-i18n="footer_link_about">About Us (xxxxx/en/about-us)</span>
+              </button>
+            </li>
+            <li>
+              <button onclick="navigateTo('/en/faq')" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-stone-500"></i>
+                <span data-i18n="footer_link_faq">FAQ (xxxxx/en/faq)</span>
+              </button>
+            </li>
+            <li>
+              <button onclick="navigateTo('/en/destinations')" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-stone-500"></i>
+                <span data-i18n="footer_link_dest">Destinations (xxxxx/en/destinations)</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Contact info aref= NCYU Mis Webpage -->
+        <div class="space-y-2">
+          <div class="text-xs font-bold uppercase tracking-wider text-stone-400">Contact & Affiliation</div>
+          <p class="text-xs text-stone-400" data-i18n="footer_contact_label">Academic Project Credits:</p>
+          <a href="https://misweb.ncyu.edu.tw/index.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-medium group">
+            <span>NCYU MIS Webpage</span>
+            <i data-lucide="external-link" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"></i>
+          </a>
+          <div class="text-[11px] text-stone-500 pt-1">
+            misweb.ncyu.edu.tw/index.html
+          </div>
+        </div>
+
+      </div>
+
+      <div class="border-t border-stone-800/80 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-stone-500">
+        <div>&copy; 2026 Liujiao Cultural Tourism Prototype. All rights reserved.</div>
+        <div class="mt-2 sm:mt-0 font-mono">Status: UX Pseudocode Compliant</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= LOGIC, DATA & EVENT LISTENERS ================= -->
+  <script>
+    // --- 1. DESTINATIONS DATABASE (LIUJIAO TOWNSHIP) ---
+    const DESTINATIONS = [
+      {
+        id: "suantou-sugar-factory",
+        nameEn: "Suantou Sugar Factory Cultural Park",
+        nameCn: "蒜頭糖廠蔗埕文化園區",
+        categoryEn: "Recreational / Entertaining",
+        categoryCn: "休閒娛樂",
+        typeHome: "entertaining", // entertaining | tourist | restaurant
+        typeDest: "recreational", // recreational | sightseeing | food_local | food_western | food_snack
+        popularity: "bustling",   // bustling | peaceful
+        priceEn: "Free admission (Train ride NT$150)",
+        priceCn: "免費入園（五分車搭乘約 NT$150）",
+        activitiesEn: "Retro mini-train riding, Vintage ice tasting, Sugar culture exploration",
+        activitiesCn: "搭乘復古五分車、品嚐糖廠紅豆冰、糖業文化歷史巡禮",
+        coords: "23.4984° N, 120.2987° E",
+        mapX: 42, // percent coordinate on SVG map
+        mapY: 62,
+        shortIntroEn: "Established in 1906, once Taiwan's 3rd largest sugar refinery. Now features nostalgic mini passenger trains, heritage Japanese barracks, and rich historical exhibits.",
+        shortIntroCn: "建於1906年，曾為台灣第三大製糖廠。現設有五分車懷舊遊園體驗、日式百年宿舍群及糖業文化歷史走廊。"
+      },
+      {
+        id: "puzi-river-cycle-path",
+        nameEn: "Puzi River Scenic Cycle Path",
+        nameCn: "朴子溪自行車道",
+        categoryEn: "Sightseeing",
+        categoryCn: "觀光景點",
+        typeHome: "tourist",
+        typeDest: "sightseeing",
+        popularity: "peaceful",
+        priceEn: "Free (Bicycle rental ~NT$100-200)",
+        priceCn: "免費（現場租借自行車約 NT$100-200）",
+        activitiesEn: "Cycling across suspension bridge, Countryside landscape photography, Bird watching",
+        activitiesCn: "騎乘自行車漫遊六家佃長壽吊橋、綠色隧道攝影、賞鳥觀景",
+        coords: "23.5042° N, 120.3015° E",
+        mapX: 48,
+        mapY: 48,
+        shortIntroEn: "A 25km scenic biking trail starting from the Suantou Sugar Factory, crossing the iconic Liujiadian Changshou Suspension Bridge over the Puzi River.",
+        shortIntroCn: "全長約25公里的熱門綠色車道，起點自蒜頭糖廠出發，跨越壯麗的六家佃長壽吊橋，沿途綠意盎然。"
+      },
+      {
+        id: "tanqian-heritage-village",
+        nameEn: "Tanqian Ancient Courtyard Community",
+        nameCn: "潭墘村百年古厝聚落",
+        categoryEn: "Sightseeing",
+        categoryCn: "觀光景點",
+        typeHome: "tourist",
+        typeDest: "sightseeing",
+        popularity: "peaceful",
+        priceEn: "Free",
+        priceCn: "免費參觀",
+        activitiesEn: "Traditional architecture photography, Rural village walking tour, Heritage exploration",
+        activitiesCn: "傳統紅磚三合院攝影、散步漫遊客家古井、歷史建築尋訪",
+        coords: "23.5188° N, 120.2794° E",
+        mapX: 25,
+        mapY: 34,
+        shortIntroEn: "Charming historic village filled with well-preserved red-brick Sanheyuan courtyards and century-old stone wells reflecting pure Taiwanese rural roots.",
+        shortIntroCn: "保留完整的紅磚古厝與傳統閩南聚落風貌，處處可見百年歷史古井與平靜悠哉的鄉村日常氛圍。"
+      },
+      {
+        id: "suantou-duck-soup",
+        nameEn: "A-Fu Traditional Duck Meat Thick Soup",
+        nameCn: "六腳阿福鴨肉羹與傳統麵食",
+        categoryEn: "Restaurants / Local Food",
+        categoryCn: "在地特色小吃",
+        typeHome: "restaurant",
+        typeDest: "food_local",
+        popularity: "bustling",
+        priceEn: "NT$50 - NT$120",
+        priceCn: "約 NT$50 - NT$120",
+        activitiesEn: "Authentic Chiayi duck noodles tasting, Local street culinary exploration",
+        activitiesCn: "品嚐經典現炒鑊氣鴨肉羹、品味傳統油蔥黃麵",
+        coords: "23.5015° N, 120.2920° E",
+        mapX: 35,
+        mapY: 58,
+        shortIntroEn: "Beloved neighborhood comfort food boasting stir-fried aromatic duck soup with tender bamboo shoots and fragrant garlic seasoning.",
+        shortIntroCn: "在地傳承數十載的經典名店，以大火快炒焦香鴨肉配上鮮脆筍絲羹湯，口感甘甜濃郁。"
+      },
+      {
+        id: "farm-bistro-western",
+        nameEn: "Sugarcane Country Garden Bistro",
+        nameCn: "甘蔗田園鄉村景觀餐坊",
+        categoryEn: "Restaurants / Western food",
+        categoryCn: "西式鄉村餐飲",
+        typeHome: "restaurant",
+        typeDest: "food_western",
+        popularity: "peaceful",
+        priceEn: "NT$250 - NT$450",
+        priceCn: "約 NT$250 - NT$450",
+        activitiesEn: "Farm-to-table lunch, Garden afternoon tea, Sunset countryside viewing",
+        activitiesCn: "在地蔬果義大利麵、莊園手沖咖啡、田園夕陽觀景下午茶",
+        coords: "23.5120° N, 120.3150° E",
+        mapX: 68,
+        mapY: 42,
+        shortIntroEn: "Cozy country-style bistro serving freshly prepared pasta, wood-fired snacks, and hand-brewed coffees surrounded by open fields.",
+        shortIntroCn: "坐落於恬靜農田旁的溫馨景觀西餐廳，提供以在地農產入菜的手作義大利麵與香醇咖啡。"
+      },
+      {
+        id: "traditional-sesame-pastry",
+        nameEn: "Liujiao Handmade Sesame & Peanut Cakes",
+        nameCn: "六腳古早味手工麻油花生蔴粩",
+        categoryEn: "Restaurants / Snacks",
+        categoryCn: "特色點心伴手禮",
+        typeHome: "restaurant",
+        typeDest: "food_snack",
+        popularity: "bustling",
+        priceEn: "NT$100 - NT$200",
+        priceCn: "約 NT$100 - NT$200",
+        activitiesEn: "Souvenir shopping, Witnessing artisanal confectionery making, Snack tasting",
+        activitiesCn: "採買手工伴手禮、現場品嚐現裹香酥蔴粩與花生糖",
+        coords: "23.4960° N, 120.2880° E",
+        mapX: 30,
+        mapY: 70,
+        shortIntroEn: "Famous local artisan bakery crafting traditional puffy crisps coated with aromatic local sesame and crushed roasted peanuts.",
+        shortIntroCn: "六腳鄉知名的百年古法零嘴伴手禮，嚴選本地黑麻油與香脆花生，甜而不膩。"
+      }
+    ];
+
+    // --- 2. BILINGUAL DICTIONARY (CN / EN) ---
+    let currentLang = 'en';
+
+    const I18N = {
+      en: {
+        brand_title: "LIUJIAO",
+        brand_subtitle: "Chiayi Cultural Travel",
+        nav_home: "Home",
+        nav_destinations: "Destinations",
+        nav_faq: "FAQ",
+        nav_about: "About Us",
+        menu_label: "Menu Navigation",
+        menu_destinations: "> Destinations",
+        menu_about: "> About Us",
+        menu_faq: "> FAQ",
+        intro_badge: "Chiayi County, Taiwan • 六腳鄉",
+        intro_heading: "Heritage, Sugar Trains & Scenic Rural Trails",
+        intro_desc: "Welcome to Liujiao (六腳鄉), a tranquil township nestled in the Chianan Plain of Chiayi County. Famous for the historic Suantou Sugar Factory, the gentle breezes along the Puzi River cycle path, and authentic local rural warmth.",
+        explore_destinations: "Explore All Destinations",
+        view_map_filter: "Interactive Map & Filter",
+        feat_subtitle: "Featured Highlights",
+        feat_title: "Destinations & Key Experiences",
+        see_all_dest: "View full catalog (xxxxx/en/destinations)",
+        poi_subtitle: "Interactive Explorer",
+        poi_title: "Point of Interest Map and Filter",
+        poi_desc: "Filter local Liujiao locations by activity type and popularity preference.",
+        filter_title: "Destination Filter Controls",
+        filter_activity_type: "Type of activity",
+        filter_popularity: "Destination popularity",
+        map_preview_title: "Liujiao Township Map representation",
+        map_hint: "Click pins or list items to view full Google Maps coordinates and details.",
+        filtered_results: "Filtered Destination",
+        dest_page_title: "Liujiao Destinations & Attractions",
+        dest_page_intro: "Comprehensive catalog of historic heritage, scenic river paths, and authentic culinary stops across Liujiao. Browse detailed prices, recommended activities, and Google Maps location coordinates below.",
+        filter_criteria: "Filter Criteria",
+        activity_type_label: "Type of activity",
+        popularity_label: "Destination popularity",
+        faq_title: "Frequently Asked Questions",
+        faq_subtitle: "Everything you need to know when planning a trip to Liujiao Township.",
+        faq_q1: "How do I get to Liujiao Township from Chiayi High-Speed Rail (HSR) Station?",
+        faq_a1: "Liujiao is located adjacent to Chiayi HSR Station. You can take Chiayi County Bus No. 7307 or 7308 directly to Suantou Sugar Factory in about 10–15 minutes, or take a convenient taxi ride (approx. NT$150–200). Bicycle rentals and YouBike 2.0 stations are also available nearby.",
+        faq_q2: "What is the approximate budget for a day trip in Liujiao?",
+        faq_a2: "Most nature and heritage sites (such as the Puzi River Bike Trail and Tanqian Historic Courtyards) are free of charge. Suantou Sugar Train rides cost approximately NT$100–150. A full day including local lunch, shaved ice, and bike rental generally costs between NT$300 to NT$600 per person.",
+        faq_q3: "Can I rent bicycles locally for the Puzi River Cycle Path?",
+        faq_a3: "Yes! Bike rental shops are conveniently located right at the entrance of Suantou Sugar Factory. Tandem bikes, regular road bikes, and electric bikes are available for hourly or whole-day rental.",
+        faq_q4: "What are the must-eat local specialty foods?",
+        faq_a4: "Do not miss Suantou Sugar Factory’s red bean ice cream with condensed milk, traditional Liujiao sesame biscuits, and the famous mutton noodles and duck soup along the old village market streets.",
+        about_title: "About This Project",
+        about_subtitle: "Academic Collaboration & Cultural Tourism Digital Initiative",
+        about_univ: "National Chiayi University (NCYU)",
+        about_dept: "Department of Information Management (國立嘉義大學資訊管理學系)",
+        about_text_p1: "This digital prototype serves as an integrated tourism portal designed for Liujiao Township (嘉義縣六腳鄉). It implements a user experience (UX) architectural model engineered to connect visitors with local attractions, route planning, budget estimates, and interactive map filtering.",
+        about_redirect_spec: "Official Department Link (UX aref Target)",
+        about_redirect_desc: "As defined in the functional pseudocode: aref= https://misweb.ncyu.edu.tw/index.html",
+        visit_ncyu: "Visit NCYU MIS Official Webpage",
+        modal_intro_title: "Introduction",
+        modal_price_note: "Per person estimate",
+        back_to_top: "Back to Top",
+        footer_summary: "A research prototype adhering to hierarchical UX pseudocode structure: Header Banner, Hamburger navigation, POI Map Filtering, and subpage redirects.",
+        footer_link_about: "About Us (xxxxx/en/about-us)",
+        footer_link_faq: "FAQ (xxxxx/en/faq)",
+        footer_link_dest: "Destinations (xxxxx/en/destinations)",
+        footer_contact_label: "Academic Project Credits:"
+      },
+      cn: {
+        brand_title: "六腳觀光",
+        brand_subtitle: "嘉義文化輕旅行",
+        nav_home: "首頁",
+        nav_destinations: "景點導覽",
+        nav_faq: "常見問題",
+        nav_about: "關於我們",
+        menu_label: "選單導覽",
+        menu_destinations: "> 景點導覽 (Destinations)",
+        menu_about: "> 關於我們 (About Us)",
+        menu_faq: "> 常見問題 (FAQ)",
+        intro_badge: "台灣嘉義縣 • 漫遊六腳鄉",
+        intro_heading: "糖鐵古蹟、樸實田野與怡人自行車道",
+        intro_desc: "歡迎造訪嘉義縣六腳鄉！坐落於嘉南平原之上，以百年蒜頭糖廠、微風吹拂的朴子溪自行車道以及純樸濃厚的農村人情味聞名，是悠閒體驗慢活文化的絕佳勝地。",
+        explore_destinations: "探索全部景點清單",
+        view_map_filter: "景點地圖與篩選器",
+        feat_subtitle: "精選推薦景點",
+        feat_title: "熱門景點與特色體驗",
+        see_all_dest: "查看完整景點頁面 (xxxxx/en/destinations)",
+        poi_subtitle: "互動式地圖探索",
+        poi_title: "景點地圖與篩選器 (Map & Filter)",
+        poi_desc: "可依活動類型（娛樂景點/觀光打卡/美食餐廳）及熱門程度進行即時篩選。",
+        filter_title: "景點條件篩選器",
+        filter_activity_type: "活動類型 (Type of activity)",
+        filter_popularity: "熱門程度 (Destination popularity)",
+        map_preview_title: "六腳鄉區域地圖點位示意",
+        map_hint: "點擊標記點或右側卡片可檢視完整 Google Maps 定位與詳細活動內容。",
+        filtered_results: "篩選後的景點 (Filtered Destination)",
+        dest_page_title: "六腳鄉景點總覽 (Destinations)",
+        dest_page_intro: "完整收錄六腳鄉歷史古蹟、田園自行車道與在地私房美食。下方提供預估花費、推薦活動與 Google Maps 定位資訊。",
+        filter_criteria: "條件篩選器",
+        activity_type_label: "活動類型 (Type of activity)",
+        popularity_label: "熱門程度 (Destination popularity)",
+        faq_title: "常見問題 (FAQ)",
+        faq_subtitle: "規劃六腳鄉一日遊或週末行程的必備旅遊指引。",
+        faq_q1: "從嘉義高鐵站出發，如何抵達六腳鄉與蒜頭糖廠？",
+        faq_a1: "六腳鄉鄰近嘉義高鐵站，出站後可搭乘嘉義縣公車 7307 或 7308 至蒜頭糖廠站（車程約10-15分鐘），亦可搭乘計程車（約 NT$150-200）或租借 YouBike 2.0 騎乘前往。",
+        faq_q2: "六腳鄉一日遊的預估預算大約是多少？",
+        faq_a2: "大部分戶外自然景點（如朴子溪自行車道、潭墘村古厝）皆為免費入園參觀；蒜頭糖廠五分車全票約 NT$150。包含午餐在地小吃、糖廠紅豆冰與自行車租借，每人約 NT$300 至 NT$600 即可享受充實行程。",
+        faq_q3: "朴子溪自行車道現場可以租借單車嗎？",
+        faq_a3: "可以！蒜頭糖廠園區入口與周邊設有多家自行車租賃服務站，提供單人車、協力車、淑女車與電動輔助車等多元選擇。",
+        faq_q4: "六腳鄉有哪些必吃在地特色美食與伴手禮？",
+        faq_a4: "推薦品嚐蒜頭糖廠經典紅豆牛奶冰、六腳市場熱炒鴨肉羹、黑麻油花生酥蔴粩，以及濃郁的古早味麵食小吃。",
+        about_title: "關於本專案 (About Us)",
+        about_subtitle: "學術成果與地方觀光數位導覽原型",
+        about_univ: "國立嘉義大學 (NCYU)",
+        about_dept: "資訊管理學系 (Department of Information Management)",
+        about_text_p1: "本網站依據專案 UX 虛擬碼規範設計，實作六腳鄉觀光導覽系統。提供使用者清晰的景點階層、地圖篩選、花費預估與重新導向體驗。",
+        about_redirect_spec: "系所官方網站連結 (UX aref 重新導向目標)",
+        about_redirect_desc: "如虛擬碼所定義之重新導向規格：aref= https://misweb.ncyu.edu.tw/index.html",
+        visit_ncyu: "前往嘉義大學資管系官方首頁",
+        modal_intro_title: "景點詳細簡介",
+        modal_price_note: "每人參考預估花費",
+        back_to_top: "回到頂部 (Back to Top)",
+        footer_summary: "依據使用者體驗（UX）虛擬碼架構開發，涵蓋頂部導覽列、漢堡選單、地圖互動篩選與子頁面重新導向。",
+        footer_link_about: "關於我們 (xxxxx/en/about-us)",
+        footer_link_faq: "常見問題 (xxxxx/en/faq)",
+        footer_link_dest: "景點導覽 (xxxxx/en/destinations)",
+        footer_contact_label: "學術合作系所："
+      }
+    };
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      
+      // Update toggle buttons UI
+      const enBtn = document.getElementById('lang-en');
+      const cnBtn = document.getElementById('lang-cn');
+      if (lang === 'en') {
+        enBtn.className = "px-2.5 py-1 rounded-md bg-white text-stone-900 shadow-sm transition-all";
+        cnBtn.className = "px-2.5 py-1 rounded-md text-stone-500 hover:text-stone-900 transition-all";
+        document.getElementById('mobile-lang-indicator').textContent = "EN";
+      } else {
+        cnBtn.className = "px-2.5 py-1 rounded-md bg-white text-stone-900 shadow-sm transition-all";
+        enBtn.className = "px-2.5 py-1 rounded-md text-stone-500 hover:text-stone-900 transition-all";
+        document.getElementById('mobile-lang-indicator').textContent = "中文";
+      }
+
+      // Update static text elements with data-i18n
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (I18N[lang] && I18N[lang][key]) {
+          el.textContent = I18N[lang][key];
+        }
+      });
+
+      // Re-render dynamic lists with new language
+      renderHomeFeatured();
+      renderHomeFilteredPOI();
+      filterDestPage();
+    }
+
+    function toggleLanguage() {
+      setLanguage(currentLang === 'en' ? 'cn' : 'en');
+    }
+
+    // --- 3. SIMULATED ROUTING (UX Path Bar & View Panels) ---
+    const ROUTE_TITLES = {
+      '/en/website': 'xxxxx/en/website',
+      '/en/destinations': 'xxxxx/en/destinations',
+      '/en/faq': 'xxxxx/en/faq',
+      '/en/about-us': 'xxxxx/en/about-us'
+    };
+
+    function navigateTo(path) {
+      // Update Simulated URL bar
+      const urlDisplay = document.getElementById('current-url');
+      urlDisplay.textContent = ROUTE_TITLES[path] || `xxxxx${path}`;
+
+      // Toggle Panels
+      document.querySelectorAll('.view-panel').forEach(panel => panel.classList.add('hidden'));
+
+      if (path === '/en/website') {
+        document.getElementById('view-homepage').classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (path === '/en/destinations') {
+        document.getElementById('view-destinations').classList.remove('hidden');
+        filterDestPage();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (path === '/en/faq') {
+        document.getElementById('view-faq').classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (path === '/en/about-us') {
+        document.getElementById('view-about-us').classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      
+      closeHamburger();
+    }
+
+    function mobileNavTo(path) {
+      navigateTo(path);
+      closeHamburger();
+    }
+
+    // --- 4. HAMBURGER MENU INTERACTION ---
+    function toggleHamburger() {
+      const menu = document.getElementById('mobile-menu');
+      const isHidden = menu.classList.contains('hidden');
+      if (isHidden) {
+        menu.classList.remove('hidden');
+      } else {
+        menu.classList.add('hidden');
+      }
+    }
+
+    function closeHamburger() {
+      document.getElementById('mobile-menu').classList.add('hidden');
+    }
+
+    // --- 5. RENDER FEATURED DESTINATIONS ON HOMEPAGE ---
+    function renderHomeFeatured() {
+      const container = document.getElementById('home-featured-grid');
+      container.innerHTML = '';
+
+      // Pick top 3 destinations as featured
+      const featured = DESTINATIONS.slice(0, 3);
+      featured.forEach(item => {
+        const name = currentLang === 'en' ? item.nameEn : item.nameCn;
+        const intro = currentLang === 'en' ? item.shortIntroEn : item.shortIntroCn;
+        const price = currentLang === 'en' ? item.priceEn : item.priceCn;
+        const activities = currentLang === 'en' ? item.activitiesEn : item.activitiesCn;
+
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl border border-stone-200 p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer";
+        card.onclick = () => openDestinationDetail(item.id);
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between text-xs text-brand-700 font-semibold mb-2">
+              <span class="bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200/60">${currentLang === 'en' ? item.categoryEn : item.categoryCn}</span>
+              <span class="text-[11px] font-mono text-stone-400 group-hover:text-brand-600 flex items-center gap-0.5">
+                =aref <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              </span>
+            </div>
+            
+            <h3 class="text-base font-bold text-stone-900 group-hover:text-brand-700 transition-colors mb-2">${name}</h3>
+            <p class="text-xs text-stone-500 leading-relaxed line-clamp-2 mb-4">${intro}</p>
+
+            <div class="space-y-2 border-t border-stone-100 pt-3 text-xs">
+              <!-- Destination point in Google Maps -->
+              <div class="flex items-center gap-2 text-stone-600">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-red-500 flex-shrink-0"></i>
+                <span class="font-mono text-[11px] text-stone-700 truncate">${item.coords}</span>
+              </div>
+
+              <!-- Destination approximate price -->
+              <div class="flex items-center gap-2 text-stone-600">
+                <i data-lucide="tag" class="w-3.5 h-3.5 text-amber-500 flex-shrink-0"></i>
+                <span class="font-medium text-stone-900">${price}</span>
+              </div>
+
+              <!-- Destination activities -->
+              <div class="flex items-start gap-2 text-stone-600">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-600 flex-shrink-0 mt-0.5"></i>
+                <span class="text-stone-600 line-clamp-1">${activities}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-xs font-semibold text-brand-700 group-hover:translate-x-1 transition-transform">
+            <span>${currentLang === 'en' ? 'Click for detail & map' : '點擊查看詳情與地圖'}</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    // --- 6. HOMEPAGE POINT OF INTEREST FILTER & MAP ---
+    let homeActiveActivity = 'all';
+    let homeActivePop = 'all';
+
+    function setHomeActivityFilter(type) {
+      homeActiveActivity = type;
+      document.querySelectorAll('.home-act-btn').forEach(btn => {
+        if (btn.getAttribute('data-val') === type) {
+          btn.className = "home-act-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-brand-700 text-white shadow-sm transition-all";
+        } else {
+          btn.className = "home-act-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200 transition-all";
+        }
+      });
+      renderHomeFilteredPOI();
+    }
+
+    function setHomePopularityFilter(pop) {
+      homeActivePop = pop;
+      document.querySelectorAll('.home-pop-btn').forEach(btn => {
+        if (btn.getAttribute('data-pop') === pop) {
+          btn.className = "home-pop-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-brand-700 text-white shadow-sm transition-all";
+        } else {
+          btn.className = "home-pop-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200 transition-all";
+        }
+      });
+      renderHomeFilteredPOI();
+    }
+
+    function resetHomeFilters() {
+      setHomeActivityFilter('all');
+      setHomePopularityFilter('all');
+    }
+
+    function renderHomeFilteredPOI() {
+      const filtered = DESTINATIONS.filter(item => {
+        const matchAct = homeActiveActivity === 'all' || item.typeHome === homeActiveActivity;
+        const matchPop = homeActivePop === 'all' || item.popularity === homeActivePop;
+        return matchAct && matchPop;
+      });
+
+      document.getElementById('filter-count').textContent = filtered.length;
+
+      // Render pins on map representation
+      const pinsContainer = document.getElementById('map-pins-container');
+      pinsContainer.innerHTML = '';
+      filtered.forEach(item => {
+        const pin = document.createElement('div');
+        pin.className = "absolute pointer-events-auto cursor-pointer transform -translate-x-1/2 -translate-y-1/2 group";
+        pin.style.left = `${item.mapX}%`;
+        pin.style.top = `${item.mapY}%`;
+        pin.onclick = () => openDestinationDetail(item.id);
+
+        pin.innerHTML = `
+          <div class="relative flex items-center justify-center">
+            <span class="animate-ping absolute inline-flex h-6 w-6 rounded-full bg-emerald-400 opacity-75"></span>
+            <div class="w-7 h-7 rounded-full bg-brand-600 border-2 border-white text-white flex items-center justify-center shadow-lg group-hover:scale-125 transition-transform">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+            </div>
+            <!-- Tooltip -->
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden group-hover:flex flex-col items-center z-30 pointer-events-none">
+              <div class="bg-stone-900 text-white text-[10px] font-semibold px-2 py-1 rounded shadow-lg whitespace-nowrap">
+                ${currentLang === 'en' ? item.nameEn : item.nameCn}
+              </div>
+              <div class="w-2 h-2 bg-stone-900 rotate-45 -mt-1"></div>
+            </div>
+          </div>
+        `;
+        pinsContainer.appendChild(pin);
+      });
+
+      // Render list items
+      const listContainer = document.getElementById('home-filtered-list');
+      listContainer.innerHTML = '';
+
+      if (filtered.length === 0) {
+        listContainer.innerHTML = `
+          <div class="p-8 text-center bg-white rounded-xl border border-stone-200 text-stone-400 text-xs">
+            No destinations found matching your selected filters. Try choosing "All Activities" or "All Popularity".
+          </div>
+        `;
+      } else {
+        filtered.forEach(item => {
+          const name = currentLang === 'en' ? item.nameEn : item.nameCn;
+          const intro = currentLang === 'en' ? item.shortIntroEn : item.shortIntroCn;
+          const price = currentLang === 'en' ? item.priceEn : item.priceCn;
+          const activities = currentLang === 'en' ? item.activitiesEn : item.activitiesCn;
+
+          const row = document.createElement('div');
+          row.className = "bg-white p-4 rounded-xl border border-stone-200 hover:border-brand-500 hover:shadow-sm transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 group";
+          row.onclick = () => openDestinationDetail(item.id);
+
+          row.innerHTML = `
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-stone-100 text-stone-600">
+                  ${currentLang === 'en' ? item.categoryEn : item.categoryCn}
+                </span>
+                <span class="text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                  ${item.popularity === 'bustling' ? (currentLang === 'en' ? 'Bustling' : '熱鬧繁華') : (currentLang === 'en' ? 'Peaceful' : '清幽寧靜')}
+                </span>
+              </div>
+              <h4 class="font-bold text-stone-900 group-hover:text-brand-700 transition-colors text-sm">${name}</h4>
+              <p class="text-xs text-stone-500 line-clamp-1">${intro}</p>
+              <div class="flex flex-wrap items-center gap-3 text-[11px] text-stone-600 pt-1">
+                <span class="flex items-center gap-1 font-medium text-stone-800"><i data-lucide="tag" class="w-3 h-3 text-amber-500"></i> ${price}</span>
+                <span class="flex items-center gap-1 text-stone-500"><i data-lucide="map-pin" class="w-3 h-3 text-red-500"></i> ${item.coords}</span>
+              </div>
+            </div>
+
+            <div class="self-end sm:self-center flex items-center gap-1 text-xs font-semibold text-brand-700 group-hover:translate-x-1 transition-transform flex-shrink-0">
+              <span>View</span>
+              <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </div>
+          `;
+          listContainer.appendChild(row);
+        });
+      }
+      lucide.createIcons();
+    }
+
+    // --- 7. DESTINATIONS SUBPAGE FILTER & RENDERING ---
+    function resetDestPageFilters() {
+      const actAll = document.querySelector('input[name="dest_activity"][value="all"]');
+      const popAll = document.querySelector('input[name="dest_pop"][value="all"]');
+      if (actAll) actAll.checked = true;
+      if (popAll) popAll.checked = true;
+      filterDestPage();
+    }
+
+    function filterDestPage() {
+      const actRadio = document.querySelector('input[name="dest_activity"]:checked');
+      const popRadio = document.querySelector('input[name="dest_pop"]:checked');
+
+      const actVal = actRadio ? actRadio.value : 'all';
+      const popVal = popRadio ? popRadio.value : 'all';
+
+      const results = DESTINATIONS.filter(item => {
+        let matchAct = false;
+        if (actVal === 'all') {
+          matchAct = true;
+        } else if (actVal === 'recreational' && item.typeDest === 'recreational') {
+          matchAct = true;
+        } else if (actVal === 'sightseeing' && item.typeDest === 'sightseeing') {
+          matchAct = true;
+        } else if (actVal === 'food_local' && item.typeDest === 'food_local') {
+          matchAct = true;
+        } else if (actVal === 'food_western' && item.typeDest === 'food_western') {
+          matchAct = true;
+        } else if (actVal === 'food_snack' && item.typeDest === 'food_snack') {
+          matchAct = true;
+        }
+
+        const matchPop = (popVal === 'all') || (item.popularity === popVal);
+
+        return matchAct && matchPop;
+      });
+
+      const totalCounter = document.getElementById('dest-total-count');
+      if (totalCounter) totalCounter.textContent = results.length;
+
+      const grid = document.getElementById('dest-page-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      if (results.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-2 p-10 text-center bg-white rounded-2xl border border-stone-200 text-stone-400 text-xs">
+            No destinations found matching your criteria. Try adjusting the radio filters.
+          </div>
+        `;
+      } else {
+        results.forEach(item => {
+          const name = currentLang === 'en' ? item.nameEn : item.nameCn;
+          const intro = currentLang === 'en' ? item.shortIntroEn : item.shortIntroCn;
+          const price = currentLang === 'en' ? item.priceEn : item.priceCn;
+          const activities = currentLang === 'en' ? item.activitiesEn : item.activitiesCn;
+
+          const card = document.createElement('div');
+          card.className = "bg-white rounded-2xl border border-stone-200 p-5 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group";
+          card.onclick = () => openDestinationDetail(item.id);
+
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between text-xs mb-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-brand-700 font-semibold border border-emerald-200">
+                  ${currentLang === 'en' ? item.categoryEn : item.categoryCn}
+                </span>
+                <span class="text-[11px] font-mono text-stone-400 group-hover:text-brand-700">
+                  xxxxx/en/destinations/${item.id}
+                </span>
+              </div>
+
+              <!-- Destination Name and Short Introduction -->
+              <h3 class="font-bold text-base text-stone-900 group-hover:text-brand-700 transition-colors mb-2">${name}</h3>
+              <p class="text-xs text-stone-500 leading-relaxed mb-4">${intro}</p>
+
+              <!-- Destination Specs: Maps, Price, Activities -->
+              <div class="bg-stone-50 rounded-xl p-3 space-y-2 text-xs border border-stone-100">
+                <div class="flex items-center gap-2 text-stone-600">
+                  <i data-lucide="map-pin" class="w-3.5 h-3.5 text-red-500"></i>
+                  <span class="font-mono text-[11px]">${item.coords}</span>
+                </div>
+                <div class="flex items-center gap-2 text-stone-800 font-medium">
+                  <i data-lucide="tag" class="w-3.5 h-3.5 text-amber-500"></i>
+                  <span>${price}</span>
+                </div>
+                <div class="flex items-start gap-2 text-stone-600">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-600 mt-0.5"></i>
+                  <span class="text-[11px]">${activities}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-xs font-semibold text-brand-700">
+              <span>View Detail Specs</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      }
+      lucide.createIcons();
+    }
+
+    // --- 8. DESTINATION DETAIL MODAL (xxxxx/en/destinations/:id) ---
+    function openDestinationDetail(id) {
+      const item = DESTINATIONS.find(d => d.id === id);
+      if (!item) return;
+
+      // Update URL display to represent sub-route
+      document.getElementById('current-url').textContent = `xxxxx/en/destinations/${item.id}`;
+
+      // Populate Modal Content
+      document.getElementById('modal-title').textContent = currentLang === 'en' ? item.nameEn : item.nameCn;
+      document.getElementById('modal-category').textContent = currentLang === 'en' ? item.categoryEn : item.categoryCn;
+      document.getElementById('modal-route').textContent = `xxxxx/en/destinations/${item.id}`;
+      document.getElementById('modal-desc').textContent = currentLang === 'en' ? item.shortIntroEn : item.shortIntroCn;
+      document.getElementById('modal-coords').textContent = item.coords;
+      document.getElementById('modal-price').textContent = currentLang === 'en' ? item.priceEn : item.priceCn;
+      document.getElementById('modal-activities').textContent = currentLang === 'en' ? item.activitiesEn : item.activitiesCn;
+
+      // External Google maps query
+      const gmapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.nameCn + ' 嘉義縣六腳鄉')}`;
+      document.getElementById('modal-gmaps-link').href = gmapsUrl;
+      document.getElementById('modal-nav-button').href = gmapsUrl;
+
+      // Show Modal
+      document.getElementById('dest-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeModal() {
+      document.getElementById('dest-modal').classList.add('hidden');
+      
+      // Restore URL display according to currently visible view
+      if (!document.getElementById('view-destinations').classList.contains('hidden')) {
+        document.getElementById('current-url').textContent = 'xxxxx/en/destinations';
+      } else if (!document.getElementById('view-homepage').classList.contains('hidden')) {
+        document.getElementById('current-url').textContent = 'xxxxx/en/website';
+      } else if (!document.getElementById('view-faq').classList.contains('hidden')) {
+        document.getElementById('current-url').textContent = 'xxxxx/en/faq';
+      } else {
+        document.getElementById('current-url').textContent = 'xxxxx/en/about-us';
+      }
+    }
+
+    // --- 9. FAQ ACCORDION LOGIC ---
+    function toggleFaq(num) {
+      const ans = document.getElementById(`faq-ans-${num}`);
+      const icon = document.getElementById(`faq-icon-${num}`);
+      const isHidden = ans.classList.contains('hidden');
+
+      // Close all others
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById(`faq-ans-${i}`);
+        const ic = document.getElementById(`faq-icon-${i}`);
+        if (el) el.classList.add('hidden');
+        if (ic) ic.classList.remove('rotate-180');
+      }
+
+      if (isHidden) {
+        ans.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      }
+    }
+
+    // --- 10. SCROLL TO TOP FOOTER ACTION ---
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    // Close modal on escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // --- INITIALIZATION ---
+    window.onload = function () {
+      renderHomeFeatured();
+      renderHomeFilteredPOI();
+      filterDestPage();
+      lucide.createIcons();
+    };
+  </script>
+</body>
+</html>

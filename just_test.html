@@ -1,165 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="css/main.css">
-    <style>
-        .highlight {
-            /* 設定初始狀態與平滑過渡 */
-            font-weight: bold;
-            background-color: transparent;
-            transition: all 0.3s ease;
-            cursor: pointer; /* 讓滑鼠變成手指形狀，提示使用者可以互動 */
-            margin-bottom: 10px;
-        }
-
-        .highlight:hover {
-            color: #d32f2f;            /* 字體變紅 */
-        }
-
-        /* 共享看板的樣式：放在 credits 下方 */
-        #global-intro {
-            font-size: 24px;
-            color: #9b9b9b;
-            min-height: 40px;       /* 預留高度，沒字時也佔據空間，防止名字區塊上下劇烈跳動 */
-            margin: 20px auto 40px auto;
-            max-width: 600px;
-            text-align: center;
-            font-weight: normal;
-            line-height: 1.6;
-        }
-
-        /* ==================== 🏠 新增：好看、實用、有趣的 Home 按鈕樣式 ==================== */
-        .home-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 55px;
-            height: 55px;
-            background-color: #ffffff;
-            border: 2px solid #333333;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 4px 4px 0px #333333; /* 復古幽默的黑邊陰影 */
-            transition: all 0.2s ease;
-            outline: none;
-            z-index: 1000;
-        }
-
-        /* 圖片基本樣式與旋轉動畫預設 */
-        .home-btn img {
-            width: 28px;
-            height: 28px;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        /* 😉 有趣互動：滑鼠移上去時，房子會像彈簧一樣放大，並微微搖晃 */
-        .home-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 6px 6px 0px #333333;
-        }
-
-        .home-btn:hover img {
-            transform: scale(1.2) rotate(-10deg); /* 房子歪頭，增加趣味感 */
-        }
-
-        /* 點擊時的下壓體感 */
-        .home-btn:active {
-            transform: translateY(2px) translateX(2px);
-            box-shadow: 2px 2px 0px #333333;
-        }
-
-        /* 🛠️ 實用設計：工具提示文字（預設隱藏） */
-        .home-btn::after {
-            content: "回首頁 🚀";
-            position: absolute;
-            bottom: 70px;
-            right: 0;
-            background-color: #333333;
-            color: #ffffff;
-            padding: 6px 12px;
-            font-size: 13px;
-            border-radius: 6px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            transform: translateY(10px);
-        }
-
-        /* 滑鼠移上去時，跳出提示文字 */
-        .home-btn:hover::after {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      overflow-x: hidden;
+    }
+  .vi {
+    width: 100vw;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    margin: 0;
+  }
+  </style>
 </head>
-<body style="padding: 0px;">
-    
-    <p style="font-size: 100px; text-align: center; margin-bottom: 10px;">credits</p>
-    
-    <!-- 1. 核心改動：在 credits 和名字中間放置唯一的共享看板 -->
-    <div id="global-intro"></div>
+<body>
+  <div>
+    <iframe class="vi"
+      src="https://www.youtube.com/embed/WjJZufaOv3o?autoplay=1&mute=1">
+    </iframe>
+  </div>
 
-    <!-- 2. 名字列表：點擊時帶入兩個參數 (目前點擊的姓名標籤, 自我介紹內容) -->
-    <div style="text-align: center;">
-        <h1 class="highlight" onclick="showIntro(this, '大家好！我是郭奕竑，負責本次專案的 CSS 與 UI。')">1144529 郭奕竑</h1>
-        <h1 class="highlight" onclick="showIntro(this, '哈囉！我是葉振甫，主要負責後端資料庫的串接與 API 邏輯開發。')">1144574 葉振甫</h1>
-        <h1 class="highlight" onclick="showIntro(this, '各位好，我是許棋恆，在團隊中擔任簡報製作、文件撰寫與系統測試。')">1144577 許棋恆</h1>
-        <h1 class="highlight" onclick="showIntro(this, 'Hi！我是周煒喆，負責程式碼的除錯（Debug）以及動畫效果的調校。')">1144543 周煒喆</h1>
-        <h1 class="highlight" onclick="showIntro(this, '麥克風測試！我是周晉瑋，協助 UI/UX 的動線規劃與使用者體驗優化。')">1144544 周晉瑋</h1>
-    </div>    
-    <br><br>
-
-    <!-- ==================== 🏠 新增：回到首頁按鈕（位置固定在右下角） ==================== -->
-    <!-- 請記得將 href="index.html" 改成你實際的首頁檔案名稱 -->
-    <a href="index.html">
-        <button class="home-btn">
-            <!-- 這裡使用了自動補全路徑，並加上白底黑線風格的預設圖片（你也可以換成你自己的圖） -->
-            <img src="./pic_assest/網頁/scroll-up.png" alt="Home">
-        </button>
-    </a>
-
-    <!-- JavaScript 切換與自動打字邏輯 -->
-    <script>
-        var timer = null; // 用來儲存計時器，全域共用
-        var currentActiveUser = ""; // 用來記錄目前看板正在顯示誰的介紹
-
-        function showIntro(element, text) {
-            var targetDiv = document.getElementById('global-intro');
-            var clickedUser = element.innerText; // 取得點擊的名字，例如 "1144529 郭奕竑"
-
-            // 每當有點擊，先強制清除正在運行的打字計時器，避免文字錯亂
-            clearInterval(timer); 
-
-            // 核心邏輯判斷：如果再次點擊同一個人，就關閉（清空）
-            if (currentActiveUser === clickedUser) {
-                targetDiv.innerHTML = "";
-                currentActiveUser = ""; // 重設記錄
-                return; // 結束執行
-            }
-
-            // 如果是點擊新的人，先清空舊文字，再開啟打字機
-            targetDiv.innerHTML = "";
-            currentActiveUser = clickedUser; // 記錄現在是誰在顯示
-
-            var index = 0;
-            // 啟動打字自動化計時器
-            timer = setInterval(function() {
-                if (index < text.length) {
-                    targetDiv.innerHTML += text.charAt(index);
-                    index++;
-                } else {
-                    clearInterval(timer); // 字印完就關閉計時器
-                }
-            }, 40); // 40毫秒印一個字
-        }
-    </script>
 </body>
 </html>

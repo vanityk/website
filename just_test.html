@@ -9,33 +9,25 @@
       margin: 0;
       padding: 0;
       background-color: #000;
-      overflow: hidden;
+      overflow-x: hidden;
     }
-  .vi {
-    width: 100vw;
-    aspect-ratio: 16 / 9;
-    margin: 0;
-    display: block;
-    pointer-events: none;
-  }
-  /* 關鍵：在影片上方加一層透明遮罩，徹底阻擋滑鼠互動與瞬間彈出的按鈕 */
-    .video-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 10;
+    video {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover; /* 讓影片填滿畫面 */
+      overflow: hidden;
+      
     }
   </style>
 </head>
 <body>
-  <div>
-    <iframe class="vi"
-      src="https://www.youtube.com/embed/WjJZufaOv3o?autoplay=1&mute=1&loop=1&playlist=WjJZufaOv3o&controls=0&disablekb=1">
-    </iframe>
-    <div class="video-overlay"></div>
-  </div>
+  <!-- 只要準備好 mp4 影片檔案放在同資料夾，就能做到完美的純畫面自動播放 -->
+   <div>
+  <video width="320" height="240" autoplay muted loop playsinline>
+    <source src="pic_assest/六腳鄉/Yee [q6EoRBvdVPQ].mp4" type="video/mp4">
+  </video>
 
+  <a style="font-size: 100px; color: azure;">sooo this is the time when he f*cked up</h1>
+</div>
 </body>
 </html>
